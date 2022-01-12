@@ -1,0 +1,275 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+#nav {
+  background-color: rgba(0, 166, 214, 1);
+  display: flex;
+  justify-content: center;
+}
+
+.navigation {
+  text-decoration: none;
+  list-style: none;
+  width: 80vw;
+
+  font-size: 18px;
+  color: #fff;
+  padding: 10px 0;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.navigation__item {
+  display: inline-block;
+}
+
+#main {
+  display: flex;
+  justify-content: center;
+}
+
+.messages {
+  width: 50%;
+  top: 130px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message {
+  font-size: 40px;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.main__container {
+  /* height: 80vh; */
+  width: 80vw;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.board__container {
+  display: flex;
+  justify-content: center;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(16, 50px);
+  grid-template-rows: repeat(4, 50px);
+}
+
+.board__empty-top {
+  grid-row: 2;
+  grid-column: 11/16;
+}
+
+.board__empty-bot {
+  grid-row: 3;
+  grid-column: 2/7;
+}
+
+.board__logo {
+  grid-row: 2/4;
+  grid-column: 7/11;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board__logo__img {
+  width: 100px;
+}
+
+.board__step {
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board__step__blue-safe {
+  background-color: rgba(0, 166, 214, 0.65);
+}
+
+.board__step__black-safe {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* 
+************************************
+  TOP ROW
+************************************
+*/
+
+.row--top {
+}
+
+.statistics {
+}
+
+.statistics__turn {
+  font-size: 50px;
+  font-weight: 100;
+  padding-top: 20px;
+}
+
+.statistics__time-left {
+}
+
+.base {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.base__square {
+  width: 150px;
+  height: 150px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.base--blue .base__square {
+  border: 12px solid rgba(0, 166, 214, 1);
+}
+
+.base--black .base__square {
+  border: 12px solid rgba(0, 0, 0, 1);
+}
+
+.base__header {
+  font-size: 30px;
+  font-weight: 300;
+  margin: 10px 0;
+}
+.dice {
+  display: flex;
+  position: relative;
+  width: 174px;
+  height: 174px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.dice--roll {
+  position: relative;
+}
+
+.dice--shake {
+  animation: shake 0.5s infinite;
+}
+
+.dice--roll::after {
+  content: "Roll!";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: rgba(0, 166, 214, 0.5);
+  color: #fff;
+  width: 100%;
+  font-size: 26px;
+  padding: 10px;
+  text-align: center;
+}
+
+.dice__number {
+  display: flex;
+  background-color: black;
+  border-radius: 50%;
+  color: white;
+  font-size: 50px;
+  align-items: center;
+  justify-content: center;
+}
+.dice__image {
+  width: 100%;
+  opacity: 0;
+  display: none;
+}
+
+.dice__image--visible {
+  opacity: 1;
+  display: block;
+}
+
+.pawn {
+  width: 35px;
+  height: 35px;
+  border: 3px solid #000;
+  border-radius: 1000%;
+}
+
+.pawn--glow {
+  cursor: pointer;
+  /* border: 3px solid rgb(245, 221, 5); */
+  box-shadow: 5px 2px 32px 7px rgb(245, 221, 5);
+}
+
+.pawn--glow:hover {
+  transform: scale(1.05);
+  transition: ease-out 0.1s;
+}
+
+.pawn--blue {
+  background-color: #00a6d6;
+}
+
+.pawn--black {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.modal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 900;
+  backdrop-filter: blur(3px);
+
+  display: flex;
+  align-items: center;
+}
+
+.modal__message {
+  font-size: 40px;
+  font-weight: 100;
+  background-color: rgba(0, 166, 214, 0.75);
+  padding: 60px;
+  width: 100%;
+  color: #fff;
+  cursor: none;
+}

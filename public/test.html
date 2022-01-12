@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My test file</title>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <main>
+      <button id="roll-dice" disabled="true">Roll dice!</button>
+      <img src="./dice_5.png" alt="Dice_1" class="dice-image disabled_image" />
+      <img
+        src="./dice_5.png"
+        alt="Dice_1"
+        style="height: 100px"
+        class="dice-image disabled_image"
+      />
+      <img
+        src="./dice_5.png"
+        alt="Dice_1"
+        style="height: 100px"
+        class="dice-image disabled_image"
+      />
+      <img
+        src="./dice_5.png"
+        alt="Dice_1"
+        style="height: 100px"
+        class="dice-image disabled_image"
+      />
+      <img
+        src="./dice_5.png"
+        alt="Dice_1"
+        style="height: 100px"
+        class="dice-image disabled_image"
+      />
+      <img
+        src="./dice_5.png"
+        alt="Dice_1"
+        style="height: 100px"
+        class="dice-image disabled_image"
+      />
+    </main>
+  </body>
+  <script>
+    const diceButton = document.querySelector("#roll-dice");
+    const diceImages = document.querySelectorAll(".dice-image");
+    let num = 3;
+    console.log(diceButton);
+    console.log(diceImages);
+    function rollDice() {
+      if (diceButton.disabled === false) {
+        console.log("Send to server'DICE-ROLLED'");
+      }
+    }
+    function enableButton(e) {
+      e.disabled = false;
+    }
+    function showImage(e) {
+      diceImages.forEach((m) => {
+        if (diceImages.item(e) !== m) {
+          m.class = "dice-image disabled_image";
+        } else {
+          m.class = "dice-image";
+        }
+      });
+    }
+  </script>
+  <style>
+    .dice-image {
+      height: 100px;
+    }
+    .disabled_image {
+      display: none;
+    }
+  </style>
+</html>
