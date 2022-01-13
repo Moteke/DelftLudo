@@ -1,9 +1,9 @@
 /*
 CHANGE TO AN IMPORT
 */
-function Player(ID) {
+function Player(ID, location) {
   this.ID = ID;
-  this.positions = [0, 0, 0, 0];
+  this.positions = location;
 }
 
 class Game {
@@ -22,26 +22,41 @@ class Game {
   nextToMove = 0;
   lastDice = 0;
   boardData = {
-    blueBaseEntrance = 36,
-    blackBaseEntrance = 18
-  }
+    blueBaseEntrance: 36,
+    blackBaseEntrance: 18,
+  };
 
   _validateMove = (from) => {
-    if (!(from in this.players[nextToMove].positions)) {
+    console.log(
+      `Current positions: ${this.players[this.nextToMove].positions}`
+    );
+    console.log(
+      `Is ${from} in there ^^^? ${this.players[
+        this.nextToMove
+      ].positions.includes(from)}`
+    );
+    if (!this.players[this.nextToMove].positions.includes(from)) {
       return false;
     }
 
-    // leaving base is always possible
+    // leaving base
     if (from === 0) return 1;
+    // if (from === 0) {
+    //   if (from in this.players[this.nextToMove].positions) return 1;
+    //   else return false;
+    // }
 
     // safe base moves
-    if (from.startsWith("black") || from.startsWith("blue")) {
+    if (
+      typeof from === "string" &&
+      (from.startsWith("black") || from.startsWith("blue"))
+    ) {
       const parts = from.split("-")[1];
       const start = +parts[0];
-      if (start < 1 || start + lastDice > 5) return false; // out of bound
+      if (start < 1 || start + this.lastDice > 5) return false; // out of bound
 
-      const desiredLocation = `${parts[0]}-${start + lastDice}`;
-      if (desiredLocation in players[nextToMove].positions) {
+      const desiredLocation = `${parts[0]}-${start + this.lastDice}`;
+      if (this.players[this.nextToMove].positions.includes(desiredLocation)) {
         // there is a pawn in this place
         return false;
       }
@@ -50,23 +65,30 @@ class Game {
     }
 
     // entering bases
-    if (from + lastDice > this.boardData.blueBaseEntrance && this.nextToMove === 0) {
+    if (
+      from + this.lastDice > this.boardData.blueBaseEntrance &&
+      this.nextToMove === 0
+    ) {
       // we want to enter the blue base
-      const basePos = from + lastDice - 19;
+      const basePos = from + this.lastDice - this.boardData.blueBaseEntrance;
 
       const desiredLocation = `blue-${basePos}`;
-      if (desiredLocation in players[nextToMove].positions) {
+      if (this.players[this.nextToMove].positions.includes(desiredLocation)) {
         // there is a pawn in this place
         return false;
       }
       return desiredLocation;
     }
-    if (from <= this.boardData.blackBaseEntrance && from + lastDice > this.boardData.blackBaseEntrance && this.nextToMove === 1) {
+    if (
+      from <= this.boardData.blackBaseEntrance &&
+      from + this.lastDice > this.boardData.blackBaseEntrance &&
+      this.nextToMove === 1
+    ) {
       // we want to enter the black base
-      const basePos = from + lastDice - 19;
+      const basePos = from + this.lastDice - this.boardData.blackBaseEntrance;
 
       const desiredLocation = `black-${basePos}`;
-      if (desiredLocation in players[nextToMove].positions) {
+      if (this.players[this.nextToMove].positions.includes(desiredLocation)) {
         // there is a pawn in this place
         return false;
       }
@@ -74,7 +96,11 @@ class Game {
     }
 
     // normal move
-    return from + this.lastDice > 36 ? from + this.lastDice % 36 : from + this.lastDice;
+    // if (!(from in this.players[this.nextToMove].positions)) return false;
+
+    return from + this.lastDice > 36
+      ? from + (this.lastDice % 36)
+      : from + this.lastDice;
   };
 
   /*
@@ -82,16 +108,19 @@ class Game {
     sent this request to make a move.
   */
   makeMove = (from) => {
+    // **** REMOVE
+    this.lastDice = Math.floor((Math.random() * 10000) % 6) + 1;
+    console.log(`ROLLED: ${this.lastDice}`);
+
     const to = this._validateMove(from);
-    if(to === false) return 'InvalidMove';
+    if (to === false) return "InvalidMove";
 
     console.log(`CORRECT MOVE: ${to}`);
-
   };
 
-  addPlayer = (ID) => {
-    return this.players.push(new Player(ID));
+  addPlayer = (ID, location) => {
+    return this.players.push(new Player(ID, location));
   };
 }
 
-module.exports = Game;
+//module.exports = Game;
