@@ -32,7 +32,7 @@ body {
 
   font-size: 18px;
   color: #fff;
-  padding: 10px 0;
+  /* padding: 10px 0; */
 
   display: flex;
   justify-content: space-between;
@@ -40,6 +40,17 @@ body {
 
 .navigation__item {
   display: inline-block;
+  /* height: 100%; */
+  padding: 10px 20px;
+}
+
+.navigation__item--clickable {
+  transition: background-color 0.3s;
+}
+
+.navigation__item--clickable:hover {
+  cursor: pointer;
+  background-color: rgb(35, 202, 248);
 }
 
 #main {
@@ -129,19 +140,10 @@ body {
 ************************************
 */
 
-.row--top {
-}
-
-.statistics {
-}
-
 .statistics__turn {
   font-size: 50px;
   font-weight: 100;
   padding-top: 20px;
-}
-
-.statistics__time-left {
 }
 
 .base {
