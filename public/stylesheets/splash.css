@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body::after {
+  content: "";
+  background: url(../images/bg.png) top left / 200px 200px repeat;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 80vw 1fr;
+}
+
+.content {
+  grid-column: 2/3;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.navigation {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.navigation ul {
+  text-decoration: none;
+  list-style-type: none;
+}
+
+.navigation__btn {
+  cursor: pointer;
+  font-size: 30px;
+}
