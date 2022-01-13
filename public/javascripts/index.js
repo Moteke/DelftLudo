@@ -156,3 +156,15 @@ state.base.addEventListener("click", (e) => {
   movePawn("base");
   unhighlightPawns();
 });
+const socket = new WebSocket("ws://localhost:3000");
+socket.onmessage = function (event) {
+    console.log("Server message:  "+event.data);
+    if(event.data == "WAITING-FOR-OTHER-PLAYER"){
+      console.log(`Showing "Waiting for another player..." screen`);
+    }
+};
+
+socket.onopen = function () {
+    socket.send("START-GAME");
+    console.log("Sending a first message to the server ...");
+};
