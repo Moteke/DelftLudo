@@ -19,11 +19,13 @@ class Game {
   */
   playerColor = ["blue", "black"];
   players = [];
-  nextToMove = 0;
+  nextToMove = 1;
   lastDice = 0;
   boardData = {
     blueBaseEntrance: 36,
     blackBaseEntrance: 18,
+    blueStart: 1,
+    blackStart: 20,
   };
 
   _validateMove = (from) => {
@@ -40,19 +42,18 @@ class Game {
     }
 
     // leaving base
-    if (from === 0) return 1;
-    // if (from === 0) {
-    //   if (from in this.players[this.nextToMove].positions) return 1;
-    //   else return false;
-    // }
+    if (from === 0)
+      return this.nextToMove == 0
+        ? this.boardData.blueStart
+        : this.boardData.blackStart;
 
     // safe base moves
     if (
       typeof from === "string" &&
       (from.startsWith("black") || from.startsWith("blue"))
     ) {
-      const parts = from.split("-")[1];
-      const start = +parts[0];
+      const parts = from.split("-");
+      const start = +parts[1];
       if (start < 1 || start + this.lastDice > 5) return false; // out of bound
 
       const desiredLocation = `${parts[0]}-${start + this.lastDice}`;
@@ -96,10 +97,9 @@ class Game {
     }
 
     // normal move
-    // if (!(from in this.players[this.nextToMove].positions)) return false;
 
     return from + this.lastDice > 36
-      ? from + (this.lastDice % 36)
+      ? (from + this.lastDice) % 36
       : from + this.lastDice;
   };
 
