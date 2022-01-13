@@ -161,7 +161,7 @@ socket.onmessage = function (event) {
     console.log("Server message:  "+event.data);
     if(event.data == "YOUR TURN"){
       socket.send(`DICE ROLLED`);
-      socket.send(`MOVE:3`);
+      //socket.send(`MOVE:3`);
     }
 };
 

@@ -21,6 +21,10 @@ const game = function(gameID) {
   this.rollDice = function(){
     return 5;
   }
+  this.madeMove = function(pos){ //return move from the provided position or "Incorrect move" if the move is incorrect
+    const diceNumb = 5;
+    return "MOVE:15-21";
+  }
 };
 
 /*************** 
@@ -104,9 +108,33 @@ wss.on("connection", function (ws) {
           con.send(madeMove);
           opponent.send(madeMove);
           //check for the move changing
+          if(gameObj.isYourTURN(con)){
+            con.send("YOUR TURN");
+            opponent.send("OPPONENT TURN");
+          }
+          else{
+            con.send("OPPONENT TURN");
+            opponent.send("YOUR TURN");
+          }
+          //check for the winning situation
+          if(gameObj.getStatus() == "1WIN"){
+            con.send("WIN");
+            opponent.send("LOSE");
+          }
+          else if(gameObj.getStatus()=="2WIN"){
+            opponent.send("WIN");
+            con.send("LOSE");
+          }
+          else if(gameObj.getStatus()=="ABORTED"){
+            con.send("ABORTED");
+            opponent.send("ABORTED");
+          }
         }
       }
     }
+  });
+  con.on("close", function(code){
+    /**WILL BE FINISHED */
   });
 });
 server.listen(port); 
