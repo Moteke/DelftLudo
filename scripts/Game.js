@@ -19,8 +19,9 @@ class Game {
   */
   playerColor = ["blue", "black"];
   players = [];
-  nextToMove = 1;
+  nextToMove = 0;
   lastDice = 0;
+  rolled = false;
   boardData = {
     blueBaseEntrance: 36,
     blackBaseEntrance: 18,
@@ -29,15 +30,11 @@ class Game {
   };
 
   _validateMove = (from) => {
-    console.log(
-      `Current positions: ${this.players[this.nextToMove].positions}`
-    );
-    console.log(
-      `Is ${from} in there ^^^? ${this.players[
-        this.nextToMove
-      ].positions.includes(from)}`
-    );
-    if (!this.players[this.nextToMove].positions.includes(from)) {
+    if (
+      this.players.length < 2 ||
+      !this.rolled ||
+      !this.players[this.nextToMove].positions.includes(from)
+    ) {
       return false;
     }
 
@@ -108,19 +105,46 @@ class Game {
     sent this request to make a move.
   */
   makeMove = (from) => {
-    // **** REMOVE
-    this.lastDice = Math.floor((Math.random() * 10000) % 6) + 1;
-    console.log(`ROLLED: ${this.lastDice}`);
+    // **** REMOVE *****
+    // TESTING ONLY
+    this.rollDice();
 
     const to = this._validateMove(from);
     if (to === false) return "InvalidMove";
 
-    console.log(`CORRECT MOVE: ${to}`);
+    // replace one of the pawns with a new position
+    const pawnIndex = this.players[this.nextToMove].positions.findIndex(
+      (el) => el === from
+    );
+    this.players[this.nextToMove].positions[pawnIndex] = to;
+
+    // TODO: check for killing enemy's pawns
+
+    console.log(
+      `Current positions: ${this.players[this.nextToMove].positions}`
+    );
+
+    if (this.lastDice !== 6) {
+      // change turn
+      this.nextToMove = (this.nextToMove + 1) % 2;
+    }
+    // it's time to roll again
+    this.rolled = false;
+    // return the properly styled message about a correct move
+    return `MOVE-${from}-${to}`;
   };
 
   addPlayer = (ID, location) => {
     return this.players.push(new Player(ID, location));
   };
+
+  rollDice = () => {
+    this.lastDice = Math.floor((Math.random() * 10000) % 6) + 1;
+    this.rolled = true;
+    return this.lastDice;
+  };
+
+  isTurnOf = (ID) => this.players[this.nextToMove].ID === ID;
 }
 
 //module.exports = Game;
