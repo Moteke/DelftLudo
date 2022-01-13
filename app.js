@@ -15,6 +15,12 @@ const game = function(gameID) {
         return 2;
       }
   }
+  this.isYourTURN = function(w){
+    return true;
+  }
+  this.rollDice = function(){
+    return 5;
+  }
 };
 
 /*************** 
@@ -50,6 +56,8 @@ let currentGame = new game(gameID);
 
 
 wss.on("connection", function (ws) {
+
+  //starting of the game
   const con = ws;
   con["id"] = numberOfPlayers++;
   const playerType = currentGame.addPlayer(con); // returning type of the player
@@ -70,8 +78,35 @@ wss.on("connection", function (ws) {
     con.send("OPPONENT TURN");
     currentGame = new game(++gameID);
   }
-  ws.on("message", function incoming(message) {
-    
+
+  //response messages
+  con.on("message", function incoming(message) {
+    const gameObj = websockets[con["id"]];
+    //const playerType = gameObj.playerA == con ? 1 : 2;
+    const opponent = gameObj.playerA == con ? gameObj.playerB : gameObj.playerA;
+    if(gameObj.isYourTURN(con)){ //can do it only if it is your turn
+      //dice rolled
+      if(message == "DICE ROLLED"){ 
+        const dice = gameObj.rollDice();
+        con.send(`YOU ROLLED ${dice}`);
+        opponent.send(`OPPONENT ROLLED ${dice}`);
+      }
+      //move somewhere
+      else if(message.slice(0, 5) == "MOVE:"){
+        const move = +message.slice(5)+1;
+        const madeMove = gameObj.madeMove(move);
+        //INVALID MOVE
+        if(madeMove == "Invalid move"){
+          con.send("INVALID MOVE");
+        }
+        //NORMAL MOVE 
+        else{
+          con.send(madeMove);
+          opponent.send(madeMove);
+          //check for the move changing
+        }
+      }
+    }
   });
 });
 server.listen(port); 

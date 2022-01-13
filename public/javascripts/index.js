@@ -159,8 +159,9 @@ state.base.addEventListener("click", (e) => {
 const socket = new WebSocket("ws://localhost:3000");
 socket.onmessage = function (event) {
     console.log("Server message:  "+event.data);
-    if(event.data == "WAITING-FOR-OTHER-PLAYER"){
-      console.log(`Showing "Waiting for another player..." screen`);
+    if(event.data == "YOUR TURN"){
+      socket.send(`DICE ROLLED`);
+      socket.send(`MOVE:3`);
     }
 };
 
