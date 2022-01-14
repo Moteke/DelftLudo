@@ -67,7 +67,6 @@ wss.on("connection", function (ws) {
     const oMsg = JSON.parse(message.toString());
     const gameObj = websockets[con["id"]];
     const opponent = gameObj.getOpponentOf(con);
-    console.log(message);
     if (gameObj.isTurnOf(con)) {
       //can do it only if it is your turn
       //dice rolled
@@ -78,7 +77,7 @@ wss.on("connection", function (ws) {
         response.activePositions = dice.possibleMoves;
         con.send(JSON.stringify(response));
         let oppResp = messages.O_OPP_ROLLED;
-        oppResp.data = dice;
+        oppResp.data = dice.number;
         opponent.send(JSON.stringify(oppResp));
       }
       //move somewhere

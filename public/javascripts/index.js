@@ -20,11 +20,11 @@ const utils = {
 
 // ****************
 // DICE
-
+let active = false;
 const dice = document.querySelector(".dice");
 dice.addEventListener("click", (e) => {
-  if (active) return;
-  else active = true;
+  if (!active) return;
+  else active = false;
 
   const { target } = e;
 
@@ -33,23 +33,22 @@ dice.addEventListener("click", (e) => {
 
   // add animation for 1 second
   boardView.startDiceShaking();
-
+  socket.send(Messages.S_DICE_ROLLED);
   setTimeout(() => {
-    // receive dice number TEMPORARY TODO
-    const diceNumber = Math.floor((Math.random() * 10000) % 6) + 1;
+    //   // receive dice number TEMPORARY TODO
+    //   const diceNumber = Math.floor((Math.random() * 10000) % 6) + 1;
 
     boardView.stopDiceShaking();
-    boardView.showSpecificDice(diceNumber);
+    //   boardView.showSpecificDice(diceNumber);
 
-    document.querySelector(
-      ".message"
-    ).textContent = `You rolled ${diceNumber}!`;
+    //   document.querySelector(
+    //     ".message"
+    //   ).textContent = `You rolled ${diceNumber}!`;
 
-    active = false;
-    highlightPawns(diceNumber);
+    //   highlightPawns(diceNumber);
   }, 1000); // set the timeout to max(1000, websocket response time)
 
-  setTimeout(() => boardView.hideDice(), 4000);
+  setTimeout(() => boardView.hideDice(), 1000);
 });
 
 // *****************
@@ -130,7 +129,7 @@ state.base.addEventListener("click", (e) => {
   movePawn("base");
   unhighlightPawns();
 });
-
+let playerType;
 const socket = new WebSocket("ws://localhost:3000");
 socket.onmessage = function (event) {
   console.log("Server message:  " + event.data);
@@ -139,16 +138,28 @@ socket.onmessage = function (event) {
   if (incomingMsg.type == Messages.T_WAIT) {
     console.log("Showing waiting screen");
   } else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
-    let playerType = incomingMsg.data;
+    playerType = incomingMsg.data;
     console.log(`Starting game as player ${playerType}`);
   } else if (incomingMsg.type == Messages.T_START) {
     console.log("Game starts");
   } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
+    active = true;
     console.log("It is your turn");
   } else if (incomingMsg.type == Messages.T_OPP_TURN) {
+    active = false;
     console.log("It is opponent turn");
   } else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
-    console.log("You rolled ...");
+    console.log(`You rolled ${incomingMsg.data}`);
+    boardView.showSpecificDice(incomingMsg.data);
+    let pos = incomingMsg.activePositions;
+    if (pos == []) {
+      console.log("There are no possible moves");
+    } else {
+      console.log(`Possibble moves are: ${pos}`);
+      for (let i = 0; i < pos.length; i++) {
+        boardView.highlightPosition(pos[i]);
+      }
+    }
   }
 };
 
