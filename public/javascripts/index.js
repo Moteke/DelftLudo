@@ -1,24 +1,4 @@
-// const diceButton = document.querySelector("#roll-dice");
-// const diceImages = document.querySelectorAll(".dice__image");
-// console.log(diceButton);
-// console.log(diceImages);
-// function rollDice() {
-//   if (diceButton.disabled === false) {
-//     console.log("Send to server'DICE-ROLLED'");
-//   }
-// }
-// function enableButton(e) {
-//   e.disabled = false;
-// }
-// function showImage(e) {
-//   diceImages.forEach((m) => {
-//     if (diceImages.item(e) !== m) {
-//       m.class = "dice__image";
-//     } else {
-//       m.class = "dice-image--visible";
-//     }
-//   });
-// }
+import * as boardView from "./boardView.js";
 
 // ****************
 // STATE
@@ -30,6 +10,8 @@ const state = {
   normalPawn: '<div class="pawn pawn--blue"></div>',
 };
 
+boardView.activateDice();
+
 const utils = {
   getStep: (number) => {
     return `[data-step-id='${number}'`;
@@ -39,7 +21,6 @@ const utils = {
 // ****************
 // DICE
 
-let active = false;
 const dice = document.querySelector(".dice");
 dice.addEventListener("click", (e) => {
   if (active) return;
@@ -48,26 +29,17 @@ dice.addEventListener("click", (e) => {
   const { target } = e;
 
   // hide the normal dice and show the 0 one
-  document
-    .querySelector(".dice__image--visible")
-    .classList.remove("dice__image--visible");
-
-  document.querySelector("#dice-0").classList.add("dice__image--visible");
+  boardView.hideNormalDice();
 
   // add animation for 1 second
-  dice.classList.add("dice--shake");
+  boardView.startDiceShaking();
 
   setTimeout(() => {
-    dice.classList.remove("dice--shake");
-
     // receive dice number TEMPORARY TODO
     const diceNumber = Math.floor((Math.random() * 10000) % 6) + 1;
 
-    document.querySelector("#dice-0").classList.remove("dice__image--visible");
-    document
-      .querySelector(`#dice-${diceNumber}`)
-      .classList.add("dice__image--visible");
-    dice.classList.remove("dice--roll");
+    boardView.stopDiceShaking();
+    boardView.showSpecificDice(diceNumber);
 
     document.querySelector(
       ".message"
@@ -76,6 +48,8 @@ dice.addEventListener("click", (e) => {
     active = false;
     highlightPawns(diceNumber);
   }, 1000); // set the timeout to max(1000, websocket response time)
+
+  setTimeout(() => boardView.hideDice(), 4000);
 });
 
 // *****************
