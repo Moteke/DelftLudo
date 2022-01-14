@@ -157,7 +157,10 @@ socket.onmessage = function (event) {
     } else {
       console.log(`Possibble moves are: ${pos}`);
       for (let i = 0; i < pos.length; i++) {
-        boardView.highlightPosition(pos[i]);
+        boardView.highlightPosition(
+          pos[i],
+          playerType === 1 ? "blue" : "black"
+        );
       }
     }
   }
