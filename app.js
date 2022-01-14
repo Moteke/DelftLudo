@@ -94,6 +94,7 @@ wss.on("connection", function (ws) {
           let response = messages.O_MOVE;
           response.from = madeMove.from;
           response.to = madeMove.to;
+          response.color = madeMove.color;
 
           con.send(JSON.stringify(response));
           opponent.send(JSON.stringify(response));

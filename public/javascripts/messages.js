@@ -88,6 +88,7 @@
     type: exports.T_MOVE,
     from: null,
     to: null,
+    color: null,
   };
   //Sent from server about win/lose/aborted
   exports.T_WIN = "WIN";
