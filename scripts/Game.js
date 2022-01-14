@@ -160,10 +160,6 @@ class Game {
     sent this request to make a move.
   */
   makeMove = (from) => {
-    // **** REMOVE *****
-    // TESTING ONLY
-    this.rollDice();
-
     const to = this._validateMove(from);
     if (to === false) return "InvalidMove";
 
@@ -173,14 +169,6 @@ class Game {
     );
     this.players[this.nextToMove].positions[pawnIndex] = to;
     this._removeOpponentsPawns(to);
-
-    // DEBUG MESSAGES:
-    // console.log(
-    //   `Current positions: ${this.players[this.nextToMove].positions}`
-    // );
-    // console.log(
-    //   `Opponent positions: ${this.players[(this.nextToMove + 1) % 2].positions}`
-    // );
 
     if (this.lastDice !== 6) {
       // change turn
