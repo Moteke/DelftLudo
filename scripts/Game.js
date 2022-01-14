@@ -100,6 +100,18 @@ class Game {
       : from + this.lastDice;
   };
 
+  _removeOpponentsPawns = (fromPos) => {
+    const opponentPositions = this.players[(this.nextToMove + 1) % 2].positions;
+
+    let index = opponentPositions.findIndex((el) => el === fromPos);
+
+    while (index != -1) {
+      console.log("Killing...");
+      opponentPositions[index] = 0;
+      index = opponentPositions.findIndex((el) => el === fromPos);
+    }
+  };
+
   /*
     We assume that the server checked that the right player
     sent this request to make a move.
@@ -117,13 +129,15 @@ class Game {
       (el) => el === from
     );
     this.players[this.nextToMove].positions[pawnIndex] = to;
+    this._removeOpponentsPawns(to);
 
-    // TODO: check for killing enemy's pawns
-    // TODO: check for the end of the game
-
-    console.log(
-      `Current positions: ${this.players[this.nextToMove].positions}`
-    );
+    // DEBUG MESSAGES:
+    // console.log(
+    //   `Current positions: ${this.players[this.nextToMove].positions}`
+    // );
+    // console.log(
+    //   `Opponent positions: ${this.players[(this.nextToMove + 1) % 2].positions}`
+    // );
 
     if (this.lastDice !== 6) {
       // change turn
