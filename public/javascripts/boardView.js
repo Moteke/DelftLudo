@@ -1,6 +1,7 @@
 export const sayHello = () => console.log(`Hello`);
 
 export const highlightPosition = (pos) => {
+  //if the position is 0, all the base pawns needed to be shown(showing error now)
   const step = document.querySelector(`[data-step-id='${pos}']`);
   highlightPawnsIn(step);
 };
