@@ -1,9 +1,9 @@
 /*
 CHANGE TO AN IMPORT
 */
-function Player(ID, location) {
-  this.ID = ID;
-  this.positions = location;
+function Player(ws, startingLocation) {
+  this.ws = ws;
+  this.positions = startingLocation;
 }
 
 class Game {
@@ -17,6 +17,7 @@ class Game {
 
     players[0] is blue, players[1] is black
   */
+  forcedEnd = false;
   playerColor = ["blue", "black"];
   players = [];
   nextToMove = 0;
@@ -187,8 +188,8 @@ class Game {
     return `MOVE-${from}-${to}`;
   };
 
-  addPlayer = (ID, location) => {
-    return this.players.push(new Player(ID, location));
+  addPlayer = (ws) => {
+    return this.players.push(new Player(ws, [0, 0, 0, 0]));
   };
 
   rollDice = () => {
@@ -197,9 +198,44 @@ class Game {
     return this.lastDice;
   };
 
-  isTurnOf = (ID) => this.players[this.nextToMove].ID === ID;
+  possibleMoves = () => {
+    // TODO: return possible moves to be made by the current player
+  };
 
+  /*
+    Returns true if it's the turn of the player associated with the 'ws' WebSocket
+  */
+  isTurnOf = (ws) => this.players[this.nextToMove].ws.id === ws.id;
+
+  /*
+    Returns an object with the WebSockets of the players
+  */
+  getPlayers = () => {
+    return {
+      blue: this.players[0].ws,
+      black: this.players[1].ws,
+    };
+  };
+
+  /*
+    Returns the WebSocket of the opponent of the player specified
+    by the provided WebSocket
+  */
+  getOpponentOf = (ws) => {
+    return this.players.find((p) => p.ws != ws).ws;
+  };
+
+  /*
+    Forces the game to be ended - affects the isGameOver() function.
+  */
+  endGame = () => (this.forcedEnd = true);
+
+  /*
+    If the game was forced to be ended, returns "ForcedEnd".
+    If the game is over, returns the websocket of the winner. Returns false otherwise.
+  */
   isGameOver = () => {
+    if (this.forcedEnd) return "ForcedEnd";
     // check if blue pawns are in the base
     let blueWin = true;
     this.players[0].positions.forEach((el) => {
@@ -207,7 +243,11 @@ class Game {
         blueWin = false;
     });
 
-    if (blueWin) return this.players[0].ID;
+    if (blueWin)
+      return {
+        winner: this.players[0].ws,
+        loser: this.player[1].ws,
+      };
 
     // check if black pawns are in the base
     let blackWin = true;
@@ -216,7 +256,7 @@ class Game {
         blackWin = false;
     });
 
-    if (blackWin) return this.players[1].ID;
+    if (blackWin) return this.players[1].ws;
     return false;
   };
 }
