@@ -1,4 +1,5 @@
-import * as boardView from "./boardView.js";
+import * as boardView from "./views/boardView.js";
+import * as screenView from "./views/screenView.js";
 
 // ****************
 // STATE
@@ -8,6 +9,8 @@ const state = {
   startingStep: "[data-step-id='2']",
   pawnMarkup: '<div class="pawn pawn--blue pawn--glow"></div>',
   normalPawn: '<div class="pawn pawn--blue"></div>',
+  receivedDice: false,
+  diceNumber: 0,
 };
 
 boardView.activateDice();
@@ -18,11 +21,25 @@ const utils = {
   },
 };
 
+// promises to make good dice rolling animation
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+const socketWait = (state) => {
+  return new Promise(async (resolve) => {
+    while (!state.receivedDice) {
+      await sleep(100);
+    }
+    resolve("cool");
+  });
+};
+
 // ****************
 // DICE
 let active = false;
 const dice = document.querySelector(".dice");
-dice.addEventListener("click", (e) => {
+dice.addEventListener("click", async (e) => {
   if (!active) return;
   else active = false;
 
@@ -33,22 +50,22 @@ dice.addEventListener("click", (e) => {
 
   // add animation for 1 second
   boardView.startDiceShaking();
+  state.receivedDice = false;
   socket.send(Messages.S_DICE_ROLLED);
-  setTimeout(() => {
-    //   // receive dice number TEMPORARY TODO
-    //   const diceNumber = Math.floor((Math.random() * 10000) % 6) + 1;
 
-    boardView.stopDiceShaking();
-    //   boardView.showSpecificDice(diceNumber);
-
-    //   document.querySelector(
-    //     ".message"
-    //   ).textContent = `You rolled ${diceNumber}!`;
-
-    //   highlightPawns(diceNumber);
-  }, 1000); // set the timeout to max(1000, websocket response time)
-
-  setTimeout(() => boardView.hideDice(), 1000);
+  /*
+    What happens here is we wait for both Promises to resolve:
+      - 1 second wait Promise
+      - Promise that waits until we receive a dice number
+    Once both are ready, we proceed to next lines.
+    'await' keyword is what allows us to stop the execution. It's called async await mechanism.
+    https://javascript.info/async-await
+  */
+  await Promise.all([sleep(1000), socketWait(state)]);
+  boardView.stopDiceShaking();
+  screenView.renderMessage(`You rolled ${state.diceNumber}!`);
+  boardView.showSpecificDice(state.diceNumber);
+  boardView.hideDice();
 });
 
 // *****************
@@ -137,20 +154,26 @@ socket.onmessage = function (event) {
   //show waiting screen
   if (incomingMsg.type == Messages.T_WAIT) {
     console.log("Showing waiting screen");
+    screenView.deactiveScreenWithMessage("Waiting for another player...");
   } else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
     playerType = incomingMsg.data;
     console.log(`Starting game as player ${playerType}`);
   } else if (incomingMsg.type == Messages.T_START) {
     console.log("Game starts");
+    screenView.activateScreen();
+    screenView.renderMessage("Time to start!");
   } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
     active = true;
     console.log("It is your turn");
+    screenView.renderMessage("Time to roll!");
   } else if (incomingMsg.type == Messages.T_OPP_TURN) {
     active = false;
     console.log("It is opponent turn");
+    screenView.renderMessage("Waiting for the opponent to move...");
   } else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
+    state.receivedDice = true;
+    state.diceNumber = incomingMsg.data;
     console.log(`You rolled ${incomingMsg.data}`);
-    boardView.showSpecificDice(incomingMsg.data);
     let pos = incomingMsg.activePositions;
     if (pos == []) {
       console.log("There are no possible moves");
