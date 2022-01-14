@@ -157,14 +157,10 @@ state.base.addEventListener("click", (e) => {
   unhighlightPawns();
 });
 
-console.log(Messages.T_WIN);
 const socket = new WebSocket("ws://localhost:3000");
 socket.onmessage = function (event) {
   console.log("Server message:  " + event.data);
   let incomingMsg = JSON.parse(event.data);
-  if (incomingMsg.type == Messages.T_START) {
-    socket.send(Messages.S_DICE_ROLLED);
-  }
 };
 
 socket.onopen = function () {

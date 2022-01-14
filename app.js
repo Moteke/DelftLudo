@@ -63,7 +63,7 @@ wss.on("connection", function (ws) {
     const oMsg = JSON.parse(message.toString());
     const gameObj = websockets[con["id"]];
     const opponent = gameObj.getOpponentOf(con);
-
+    console.log(message);
     if (gameObj.isTurnOf(con)) {
       //can do it only if it is your turn
       //dice rolled
@@ -127,7 +127,8 @@ wss.on("connection", function (ws) {
           console.log(`There's been an error: ${e}`);
         }
       }
-      //gameObj.setFinalStatus("ABORTED"); needed to be done
+      gameObj.endGame();
+      console.log("Game ended");
     }
   });
 });
