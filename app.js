@@ -111,6 +111,7 @@ wss.on("connection", function (ws) {
     // const gameObj = websockets[con["id"]];
     // const opponent = gameObj.getOpponentOf(con);
     console.log(`Player ${con["id"]} disconnected ...`);
+    console.log(`Code: ${code}`);
     if (code == 1001) {
       /*
        * if possible, abort the game; if not, the game is already completed
@@ -123,7 +124,7 @@ wss.on("connection", function (ws) {
           opponent.close();
           con.close();
         } catch (e) {
-          console.log("Player A closing: " + e);
+          console.log(`There's been an error: ${e}`);
         }
       }
       //gameObj.setFinalStatus("ABORTED"); needed to be done
