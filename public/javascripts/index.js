@@ -157,19 +157,16 @@ state.base.addEventListener("click", (e) => {
   unhighlightPawns();
 });
 
-
-
 console.log(Messages.T_WIN);
 const socket = new WebSocket("ws://localhost:3000");
 socket.onmessage = function (event) {
-    console.log("Server message:  "+event.data);
-    if(event.data == "YOUR TURN"){
-      socket.send(`DICE ROLLED`);
-      //socket.send(`MOVE:3`);
-    }
+  console.log("Server message:  " + event.data);
+  let incomingMsg = JSON.parse(event.data);
+  if (incomingMsg.type == Messages.T_START) {
+    socket.send(Messages.S_DICE_ROLLED);
+  }
 };
 
 socket.onopen = function () {
-    socket.send("START-GAME");
-    console.log("Sending a first message to the server ...");
+  console.log("Connected to the browser");
 };
