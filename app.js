@@ -9,7 +9,7 @@ const http = require("http");
 const messages = require("./public/javascripts/messages");
 const Game = require("./scripts/Game");
 
-const port = process.argv[2]; //connection to the port(provided in the second argument)
+const port = process.env.PORT || process.argv[2]; //connection to the port(provided in the second argument)
 const app = express();
 const server = http.createServer(app).listen(port);
 const websockets = {}; // object for storing games
