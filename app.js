@@ -1,32 +1,3 @@
-// const game = function(gameID) {
-//   this.playerA = null;
-//   this.playerB = null;
-//   this.id = gameID;
-//   this.blackPos = [0,0,0,0];
-//   this.bluePos = [0,0,0,0];
-//   this.gameState = "0 JOINT"; //"A" means A won, "B" means B won, "ABORTED" means the game was aborted
-//   this.addPlayer = function(w){
-//       if(this.playerA==null){
-//         this.playerA = w;
-//         return 1;
-//       }
-//       else{
-//         this.playerB = w;
-//         return 2;
-//       }
-//   }
-//   this.isYourTURN = function(w){
-//     return true;
-//   }
-//   this.rollDice = function(){
-//     return 5;
-//   }
-//   this.madeMove = function(pos){ //return move from the provided position or "Incorrect move" if the move is incorrect
-//     const diceNumb = 5;
-//     return "MOVE:15-21";
-//   }
-// };
-
 /*************** 
       Required modules
 *****************/
@@ -34,21 +5,26 @@ const express = require("express");
 const res = require("express/lib/response");
 const websocket = require("ws");
 const http = require("http");
+
 const messages = require("./public/javascripts/messages");
 const Game = require("./scripts/Game");
 
 const port = process.argv[2]; //connection to the port(provided in the second argument)
 const app = express();
+const server = http.createServer(app).listen(port);
 const websockets = {}; // object for storing games
 
+app.set("views", __dirname + "/views");
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public")); // allow to access public files directly
-// app.get("/", (req, res)=>{
-//   res.sendFile("splash.html" , {root: "./public"});
-// });
-// app.get("/play", (req, res)=>{
-//   res.sendFile("game.html" , {root: "./public"});
-// });
-const server = http.createServer(app);
+
+app.get("/", (req, res) => {
+  res.render("splash");
+});
+
+app.get("/play", (req, res) => {
+  res.render("game");
+});
 
 /***************
 Web Socket 
@@ -154,4 +130,3 @@ wss.on("connection", function (ws) {
     }
   });
 });
-server.listen(port);
