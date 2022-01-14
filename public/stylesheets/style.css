@@ -184,18 +184,13 @@ body {
   width: 174px;
   height: 174px;
   overflow: hidden;
+}
+
+.dice--active:hover{
   cursor: pointer;
 }
 
-.dice--roll {
-  position: relative;
-}
-
-.dice--shake {
-  animation: shake 0.5s infinite;
-}
-
-.dice--roll::after {
+.dice--active::after {
   content: "Roll!";
   position: absolute;
   top: 50%;
@@ -207,6 +202,14 @@ body {
   font-size: 26px;
   padding: 10px;
   text-align: center;
+}
+
+.dice--disabled{
+  opacity: 0.6;
+}
+
+.dice--shake {
+  animation: shake 0.5s infinite;
 }
 
 .dice__number {
