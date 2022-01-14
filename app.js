@@ -34,6 +34,7 @@ const express = require("express");
 const res = require("express/lib/response");
 const websocket = require("ws");
 const http = require("http");
+const messages = require("./public/javascripts/messages");
 //const Game = require("./Game");
 
 
