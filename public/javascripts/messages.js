@@ -99,6 +99,6 @@
     }
     exports.S_ABORTED = JSON.stringify(exports.O_ABORTED);
 
-    
+
   })(typeof exports === "undefined" ? (this.Messages = {}) : exports);
   //if exports is undefined, we are on the client; else the server

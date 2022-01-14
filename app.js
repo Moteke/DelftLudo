@@ -60,6 +60,8 @@ let gameID=0;
 let currentGame = new game(gameID);
 
 
+//CLEANING OF THE GAME OBJECTS NEEDED TO BE DONE
+
 wss.on("connection", function (ws) {
 
   //starting of the game
@@ -71,30 +73,36 @@ wss.on("connection", function (ws) {
   console.log(
     `Player ${con["id"]} placed in game ${currentGame.id} as ${playerType}`
   );
-  con.send(playerType == 1 ? "PLAYER1": "PLAYER2");
+  con.send(playerType == 1 ? messages.S_PLAYER_1: messages.S_PLAYER_2);
   if(playerType == 1){
-    con.send("WAIT FOR OPPONENT");
+    con.send(messages.S_WAIT);
   }
   if(playerType == 2){
     const opponent = currentGame.playerA;
-    opponent.send("START GAME");
-    con.send("START GAME");
-    opponent.send("YOUR TURN");
-    con.send("OPPONENT TURN");
+    opponent.send(messages.S_START);
+    con.send(messages.S_START);
+    opponent.send(messages.S_YOUR_TURN);
+    con.send(messages.S_OPP_TURN);
     currentGame = new game(++gameID);
   }
 
   //response messages
   con.on("message", function incoming(message) {
+
+    const oMsg = JSON.parse(message.toString());
     const gameObj = websockets[con["id"]];
-    //const playerType = gameObj.playerA == con ? 1 : 2;
     const opponent = gameObj.playerA == con ? gameObj.playerB : gameObj.playerA;
+
     if(gameObj.isYourTURN(con)){ //can do it only if it is your turn
       //dice rolled
-      if(message == "DICE ROLLED"){ 
+      if(oMsg.type == messages.T_DICE_ROLLED){ 
         const dice = gameObj.rollDice();
-        con.send(`YOU ROLLED ${dice}`);
-        opponent.send(`OPPONENT ROLLED ${dice}`);
+        let response = messages.O_YOU_ROLLED;
+        response.data = dice;
+        con.send(JSON.stringify(response));
+        let oppResp = messages.O_OPP_ROLLED;
+        oppResp.data = dice;
+        opponent.send(JSON.stringify(oppResp));
       }
       //move somewhere
       else if(message.slice(0, 5) == "MOVE:"){
