@@ -119,6 +119,7 @@ class Game {
     this.players[this.nextToMove].positions[pawnIndex] = to;
 
     // TODO: check for killing enemy's pawns
+    // TODO: check for the end of the game
 
     console.log(
       `Current positions: ${this.players[this.nextToMove].positions}`
@@ -145,6 +146,27 @@ class Game {
   };
 
   isTurnOf = (ID) => this.players[this.nextToMove].ID === ID;
+
+  isGameOver = () => {
+    // check if blue pawns are in the base
+    let blueWin = true;
+    this.players[0].positions.forEach((el) => {
+      if (typeof el != "string" || !el.startsWith(this.playerColor[0]))
+        blueWin = false;
+    });
+
+    if (blueWin) return this.players[0].ID;
+
+    // check if black pawns are in the base
+    let blackWin = true;
+    this.players[1].positions.forEach((el) => {
+      if (typeof el != "string" || !el.startsWith(this.playerColor[1]))
+        blackWin = false;
+    });
+
+    if (blackWin) return this.players[1].ID;
+    return false;
+  };
 }
 
 //module.exports = Game;
