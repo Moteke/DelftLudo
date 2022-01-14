@@ -1,31 +1,31 @@
-const game = function (gameID) {
-  this.playerA = null;
-  this.playerB = null;
-  this.id = gameID;
-  this.blackPos = [0, 0, 0, 0];
-  this.bluePos = [0, 0, 0, 0];
-  this.gameState = "0 JOINT"; //"A" means A won, "B" means B won, "ABORTED" means the game was aborted
-  this.addPlayer = function (w) {
-    if (this.playerA == null) {
-      this.playerA = w;
-      return 1;
-    } else {
-      this.playerB = w;
-      return 2;
-    }
-  };
-  this.isYourTURN = function (w) {
-    return true;
-  };
-  this.rollDice = function () {
-    return 5;
-  };
-  this.madeMove = function (pos) {
-    //return move from the provided position or "Incorrect move" if the move is incorrect
-    const diceNumb = 5;
-    return "MOVE:15-21";
-  };
-};
+// const game = function(gameID) {
+//   this.playerA = null;
+//   this.playerB = null;
+//   this.id = gameID;
+//   this.blackPos = [0,0,0,0];
+//   this.bluePos = [0,0,0,0];
+//   this.gameState = "0 JOINT"; //"A" means A won, "B" means B won, "ABORTED" means the game was aborted
+//   this.addPlayer = function(w){
+//       if(this.playerA==null){
+//         this.playerA = w;
+//         return 1;
+//       }
+//       else{
+//         this.playerB = w;
+//         return 2;
+//       }
+//   }
+//   this.isYourTURN = function(w){
+//     return true;
+//   }
+//   this.rollDice = function(){
+//     return 5;
+//   }
+//   this.madeMove = function(pos){ //return move from the provided position or "Incorrect move" if the move is incorrect
+//     const diceNumb = 5;
+//     return "MOVE:15-21";
+//   }
+// };
 
 /*************** 
       Required modules
@@ -35,7 +35,7 @@ const res = require("express/lib/response");
 const websocket = require("ws");
 const http = require("http");
 const messages = require("./public/javascripts/messages");
-//const Game = require("./Game");
+const Game = require("./scripts/Game");
 
 const port = process.argv[2]; //connection to the port(provided in the second argument)
 const app = express();
@@ -56,7 +56,7 @@ Web Socket
 const wss = new websocket.Server({ server });
 let numberOfPlayers = 0;
 let gameID = 0;
-let currentGame = new game(gameID);
+let currentGame = new Game();
 
 //CLEANING OF THE GAME OBJECTS NEEDED TO BE DONE
 
@@ -67,9 +67,7 @@ wss.on("connection", function (ws) {
   const playerType = currentGame.addPlayer(con); // returning type of the player
   websockets[con["id"]] = currentGame;
 
-  console.log(
-    `Player ${con["id"]} placed in game ${currentGame.id} as ${playerType}`
-  );
+  console.log(`Player ${con["id"]} placed in game ${gameID} as ${playerType}`);
   con.send(playerType == 1 ? messages.S_PLAYER_1 : messages.S_PLAYER_2);
   if (playerType == 1) {
     con.send(messages.S_WAIT);
@@ -80,7 +78,8 @@ wss.on("connection", function (ws) {
     con.send(messages.S_START);
     opponent.send(messages.S_YOUR_TURN);
     con.send(messages.S_OPP_TURN);
-    currentGame = new game(++gameID);
+    currentGame = new Game();
+    gameID++;
   }
 
   //response messages
@@ -89,7 +88,7 @@ wss.on("connection", function (ws) {
     const gameObj = websockets[con["id"]];
     const opponent = gameObj.getOpponentOf(con);
 
-    if (gameObj.isYourTURN(con)) {
+    if (gameObj.isTurnOf(con)) {
       //can do it only if it is your turn
       //dice rolled
       if (oMsg.type == messages.T_DICE_ROLLED) {
@@ -107,7 +106,7 @@ wss.on("connection", function (ws) {
         const move = oMsg.from;
         const madeMove = gameObj.madeMove(move);
         //INVALID MOVE
-        if (madeMove == "Invalid move") {
+        if (madeMove == "InvalidMove") {
           con.send(messages.S_INVALID);
         }
         //NORMAL MOVE
