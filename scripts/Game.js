@@ -40,10 +40,14 @@ class Game {
     }
 
     // leaving base
-    if (from === 0)
-      return this.nextToMove == 0
-        ? this.boardData.blueStart
-        : this.boardData.blackStart;
+    if (from === 0) {
+      // you can leave only if you rolled 6
+      if (this.lastDice === 6) {
+        return this.nextToMove == 0
+          ? this.boardData.blueStart
+          : this.boardData.blackStart;
+      } else return false;
+    }
 
     /*
       Moving the pawn in the base
@@ -185,7 +189,10 @@ class Game {
     // it's time to roll again
     this.rolled = false;
     // return the properly styled message about a correct move
-    return `MOVE-${from}-${to}`;
+    return {
+      from,
+      to,
+    };
   };
 
   addPlayer = (ws) => {
@@ -205,7 +212,7 @@ class Game {
   /*
     Returns true if it's the turn of the player associated with the 'ws' WebSocket
   */
-  isTurnOf = (ws) => this.players[this.nextToMove].ws.id === ws.id;
+  isTurnOf = (ws) => this.players[this.nextToMove].ws === ws;
 
   /*
     Returns an object with the WebSockets of the players
