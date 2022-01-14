@@ -170,10 +170,8 @@ class Game {
     this.players[this.nextToMove].positions[pawnIndex] = to;
     this._removeOpponentsPawns(to);
 
-    if (this.lastDice !== 6) {
-      // change turn
-      this.nextToMove = (this.nextToMove + 1) % 2;
-    }
+    this._changeTurn(); // possible change
+
     // it's time to roll again
     this.rolled = false;
     // return the properly styled message about a correct move
@@ -183,6 +181,12 @@ class Game {
     };
   };
 
+  _changeTurn = () => {
+    if (this.lastDice !== 6) {
+      this.nextToMove = (this.nextToMove + 1) % 2;
+    }
+  };
+
   addPlayer = (ws) => {
     return this.players.push(new Player(ws, [0, 0, 0, 0]));
   };
@@ -190,11 +194,26 @@ class Game {
   rollDice = () => {
     this.lastDice = Math.floor((Math.random() * 10000) % 6) + 1;
     this.rolled = true;
-    return this.lastDice;
+
+    const possibleMoves = this._getPossibleMoves();
+    if (possibleMoves.length === 0) {
+      // player rolled the dice and can't make any moves
+      this.rolled = false;
+      this._changeTurn();
+    }
+
+    return {
+      number: this.lastDice,
+      possibleMoves,
+    };
   };
 
-  possibleMoves = () => {
-    // TODO: return possible moves to be made by the current player
+  _getPossibleMoves = () => {
+    const possibleMoves = [];
+    this.players[this.nextToMove].positions.forEach((p) => {
+      if (this._validateMove(p) !== false) possibleMoves.push(p);
+    });
+    return possibleMoves;
   };
 
   /*
