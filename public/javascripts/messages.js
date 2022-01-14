@@ -57,7 +57,7 @@
   exports.S_DICE_ROLLED = JSON.stringify(exports.O_DICE_ROLLED);
 
   //You rolled sent from the server to the client
-  exports.T_YOU_ROLLED = "YOU-ROLLED";
+  exports.T_YOU_ROLLED = "YOU_ROLLED";
   exports.O_YOU_ROLLED = {
     type: exports.T_YOU_ROLLED,
     data: null,

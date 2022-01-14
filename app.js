@@ -40,6 +40,10 @@ wss.on("connection", function (ws) {
   //starting of the game
   const con = ws;
   con["id"] = numberOfPlayers++;
+  // if (currentGame.isGameOver() != false) {
+  //   currentGame = new Game();
+  //   gameID++;
+  // }
   const playerType = currentGame.addPlayer(con); // returning type of the player
   websockets[con["id"]] = currentGame;
 
@@ -103,6 +107,30 @@ wss.on("connection", function (ws) {
             opponent.send(messages.S_YOUR_TURN);
           }
           //check for the winning situation needed to be implemented
+          let gameStatus = gameObj.isGameOver();
+          if (gameStatus != false) {
+            //if the game is aborted
+            if (gameStatus == "ForcedEnd") {
+              console.log("Game aborted for some reason");
+              try {
+                gameObj.endGame();
+                opponent.close();
+                con.close();
+              } catch (e) {
+                console.log("Error on closing");
+              }
+            }
+            //if this client is winner
+            else if (gameStatus.winner == con) {
+              con.send(messages.S_WIN);
+              opponent.send(messages.S_LOSE);
+            }
+            //if the opponent is winner
+            else {
+              con.send(messages.S_LOSE);
+              opponent.send(messages.S_WIN);
+            }
+          }
         }
       }
     }
@@ -111,7 +139,6 @@ wss.on("connection", function (ws) {
     // const gameObj = websockets[con["id"]];
     // const opponent = gameObj.getOpponentOf(con);
     console.log(`Player ${con["id"]} disconnected ...`);
-    console.log(`Code: ${code}`);
     if (code == 1001) {
       /*
        * if possible, abort the game; if not, the game is already completed
@@ -129,6 +156,10 @@ wss.on("connection", function (ws) {
       }
       gameObj.endGame();
       console.log("Game ended");
+      if (opponent == null) {
+        currentGame = new Game();
+        gameID++;
+      }
     }
   });
 });
