@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Delft Ludo</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./stylesheets/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- <div class="modal">
+      <div class="modal__message">Waiting for another player...</div>
+    </div> -->
+    <nav id="nav">
+      <ul class="navigation">
+        <li class="navigation__item navigation__item--clickable">SURRENDER</li>
+        <li class="navigation__item">Time: 1:24</li>
+      </ul>
+    </nav>
+    <main id="main">
+      <div class="messages">
+        <span class="message">You rolled 5!</span>
+      </div>
+      <div class="main__container">
+        <div class="row row--top">
+          <div class="base base--blue">
+            <h2 class="base__header">Player 1</h2>
+            <div class="base__square">
+              <div class="pawn pawn--blue"></div>
+              <div class="pawn pawn--blue"></div>
+            </div>
+          </div>
+          <div class="statistics">
+            <h2 class="statistics__turn">Black's turn</h2>
+            <!-- <div class="statistics__time-left">You have 20 seconds left</div> -->
+          </div>
+        </div>
+        <div class="board__container">
+          <div class="board">
+            <div class="board__empty-top"></div>
+            <div class="board__empty-bot"></div>
+            <div class="board__logo">
+              <img
+                class="board__logo__img"
+                src="./images/logo-min.png"
+                alt="Delft Ludo logo"
+              />
+            </div>
+            <div class="board__step" data-step-id="1"></div>
+            <div class="board__step board__step__blue-safe" data-step-id="2">
+              <div class="pawn pawn--blue"></div>
+            </div>
+            <div class="board__step" data-step-id="3"></div>
+            <div class="board__step" data-step-id="4"></div>
+            <div class="board__step" data-step-id="5"></div>
+            <div class="board__step" data-step-id="6"></div>
+            <div class="board__step" data-step-id="7"></div>
+            <div class="board__step" data-step-id="8"></div>
+            <div class="board__step" data-step-id="9"></div>
+            <div class="board__step" data-step-id="10"></div>
+            <div class="board__step" data-step-id="11"></div>
+            <div class="board__step" data-step-id="12"></div>
+            <div class="board__step" data-step-id="13"></div>
+            <div class="board__step" data-step-id="14"></div>
+            <div class="board__step" data-step-id="15"></div>
+            <div class="board__step" data-step-id="16"></div>
+            <div class="board__step" data-step-id="36"></div>
+            <div
+              class="board__step board__step__blue-safe"
+              data-step-id="blue-1"
+            ></div>
+            <div
+              class="board__step board__step__blue-safe"
+              data-step-id="blue-2"
+            ></div>
+            <div
+              class="board__step board__step__blue-safe"
+              data-step-id="blue-3"
+            ></div>
+            <div
+              class="board__step board__step__blue-safe"
+              data-step-id="blue-4"
+            ></div>
+            <div
+              class="board__step board__step__blue-safe"
+              data-step-id="blue-5"
+            ></div>
+            <div class="board__step" data-step-id="17"></div>
+            <div class="board__step" data-step-id="35"></div>
+            <div
+              class="board__step board__step__black-safe"
+              data-step-id="black-5"
+            >
+              <div class="pawn pawn--black"></div>
+            </div>
+            <div
+              class="board__step board__step__black-safe"
+              data-step-id="black-4"
+            ></div>
+            <div
+              class="board__step board__step__black-safe"
+              data-step-id="black-3"
+            ></div>
+            <div
+              class="board__step board__step__black-safe"
+              data-step-id="black-2"
+            ></div>
+            <div
+              class="board__step board__step__black-safe"
+              data-step-id="black-1"
+            ></div>
+            <div class="board__step" data-step-id="18"></div>
+            <div class="board__step" data-step-id="34"></div>
+            <div class="board__step" data-step-id="33">
+              <div class="pawn pawn--blue"></div>
+            </div>
+            <div class="board__step" data-step-id="32"></div>
+            <div class="board__step" data-step-id="31"></div>
+            <div class="board__step" data-step-id="30"></div>
+            <div class="board__step" data-step-id="29"></div>
+            <div class="board__step" data-step-id="28"></div>
+            <div class="board__step" data-step-id="27"></div>
+            <div class="board__step" data-step-id="26"></div>
+            <div class="board__step" data-step-id="25"></div>
+            <div class="board__step" data-step-id="24"></div>
+            <div class="board__step" data-step-id="23"></div>
+            <div class="board__step" data-step-id="22"></div>
+            <div class="board__step" data-step-id="21"></div>
+            <div
+              class="board__step board__step__black-safe"
+              data-step-id="20"
+            ></div>
+            <div class="board__step" data-step-id="19"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="dice dice--roll">
+            <!-- <button class="dice__button" disabled="true">Roll dice!</button> -->
+            <div class="dice__images">
+              <img
+                id="dice-0"
+                class="dice__image"
+                src="./images/dice/dice-0.png"
+                alt="Dice"
+              />
+              <img
+                id="dice-1"
+                class="dice__image"
+                src="./images/dice/dice-1.png"
+                alt="Dice"
+              />
+              <img
+                id="dice-2"
+                class="dice__image"
+                src="./images/dice/dice-2.png"
+                alt="Dice"
+              />
+              <img
+                id="dice-3"
+                class="dice__image"
+                src="./images/dice/dice-3.png"
+                alt="Dice"
+              />
+              <img
+                id="dice-4"
+                class="dice__image dice__image--visible"
+                src="./images/dice/dice-4.png"
+                alt="Dice"
+              />
+              <img
+                id="dice-5"
+                class="dice__image"
+                src="./images/dice/dice-5.png"
+                alt="Dice"
+              />
+              <img
+                id="dice-6"
+                class="dice__image"
+                src="./images/dice/dice-6.png"
+                alt="Dice"
+              />
+            </div>
+          </div>
+          <div class="base base--black">
+            <div class="base__square">
+              <div class="pawn pawn--black"></div>
+              <div class="pawn pawn--black"></div>
+              <div class="pawn pawn--black"></div>
+            </div>
+            <h2 class="base__header">Player 2</h2>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  <script type="text/javascript" src="./javascripts/messages.js"></script>
+  <script type="text/javascript" src="./javascripts/index.js"></script>
+</html>
