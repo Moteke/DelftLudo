@@ -78,7 +78,7 @@ wss.on("connection", function (ws) {
     con.send(messages.S_WAIT);
   }
   if(playerType == 2){
-    const opponent = currentGame.playerA;
+    const opponent = currentGame.getOpponentOf(con);
     opponent.send(messages.S_START);
     con.send(messages.S_START);
     opponent.send(messages.S_YOUR_TURN);
@@ -91,59 +91,74 @@ wss.on("connection", function (ws) {
 
     const oMsg = JSON.parse(message.toString());
     const gameObj = websockets[con["id"]];
-    const opponent = gameObj.playerA == con ? gameObj.playerB : gameObj.playerA;
+    const opponent = gameObj.getOpponentOf(con);
 
     if(gameObj.isYourTURN(con)){ //can do it only if it is your turn
       //dice rolled
       if(oMsg.type == messages.T_DICE_ROLLED){ 
         const dice = gameObj.rollDice();
         let response = messages.O_YOU_ROLLED;
-        response.data = dice;
+        response.data = dice.number;
+        response.activePositions = dice.possibleMoves;
         con.send(JSON.stringify(response));
         let oppResp = messages.O_OPP_ROLLED;
         oppResp.data = dice;
         opponent.send(JSON.stringify(oppResp));
       }
       //move somewhere
-      else if(message.slice(0, 5) == "MOVE:"){
-        const move = +message.slice(5)+1;
+      else if(oMsg.type = messages.T_CLIENT_MOVE){
+        const move = oMsg.from;
         const madeMove = gameObj.madeMove(move);
         //INVALID MOVE
         if(madeMove == "Invalid move"){
-          con.send("INVALID MOVE");
+          con.send(messages.S_INVALID);
         }
         //NORMAL MOVE 
         else{
-          con.send(madeMove);
-          opponent.send(madeMove);
+          let response = messages.O_MOVE;
+          response.from = madeMove.from;
+          response.to = madeMove.to;
+
+          con.send(JSON.stringify(response));
+          opponent.send(JSON.stringify(response));
+
+
           //check for the move changing
-          if(gameObj.isYourTURN(con)){
-            con.send("YOUR TURN");
-            opponent.send("OPPONENT TURN");
+          if(gameObj.isTurnOf(con)){
+            con.send(messages.S_YOUR_TURN);
+            opponent.send(messages.S_OPP_TURN);
           }
           else{
-            con.send("OPPONENT TURN");
-            opponent.send("YOUR TURN");
+            con.send(messages.S_OPP_TURN);
+            opponent.send(messages.S_YOUR_TURN);
           }
-          //check for the winning situation
-          if(gameObj.getStatus() == "1WIN"){
-            con.send("WIN");
-            opponent.send("LOSE");
-          }
-          else if(gameObj.getStatus()=="2WIN"){
-            opponent.send("WIN");
-            con.send("LOSE");
-          }
-          else if(gameObj.getStatus()=="ABORTED"){
-            con.send("ABORTED");
-            opponent.send("ABORTED");
-          }
+          //check for the winning situation needed to be implemented
+          
         }
       }
     }
   });
   con.on("close", function(code){
-    /**WILL BE FINISHED */
+    // const gameObj = websockets[con["id"]];
+    // const opponent = gameObj.getOpponentOf(con);
+    console.log(`Player ${con["id"]} disconnected ...`);
+    if (code == 1001) {
+      /*
+       * if possible, abort the game; if not, the game is already completed
+       */
+      const gameObj = websockets[con["id"]];
+      const opponent = gameObj.getOpponentOf(con);
+      if(opponent!=null){
+        opponent.send(messages.S_ABORTED);
+        try {
+          opponent.close();
+          con.close();
+        } catch (e) {
+          console.log("Player A closing: " + e);
+        }
+      }
+      //gameObj.setFinalStatus("ABORTED"); needed to be done
+    }
   });
 });
 server.listen(port); 

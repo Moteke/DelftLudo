@@ -71,15 +71,25 @@
         type: exports.T_OPP_ROLLED,
         data: null,
     }
-
+    //Sent from client to server with position of needed pawn to be moved
+    exports.T_CLIENT_MOVE ="CMOVE";
+    exports.O_CLIENT_MOVE = {
+        type: exports.T_CLIENT_MOVE,
+        from: null,
+    }
     //Sent from server to the client about moving pawn from position x to y
+    exports.T_INVALID ="INVALID-MOVE";
+    exports.O_INVALID = {
+        type: exports.T_INVALID,
+    }
+    exports.S_INVALID = JSON.stringify(exports.O_INVALID);
+    //Sent from server to the client,if the provided move was invalid
     exports.T_MOVE ="MOVE";
     exports.O_MOVE = {
         type: exports.T_MOVE,
         from: null,
         to: null,
     }
-
     //Sent from server about win/lose/aborted
     exports.T_WIN ="WIN";
     exports.O_WIN = {
