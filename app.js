@@ -34,6 +34,7 @@ const express = require("express");
 const res = require("express/lib/response");
 const websocket = require("ws");
 const http = require("http");
+
 const messages = require("./public/javascripts/messages");
 const Game = require("./scripts/Game");
 
@@ -87,7 +88,7 @@ wss.on("connection", function (ws) {
     const oMsg = JSON.parse(message.toString());
     const gameObj = websockets[con["id"]];
     const opponent = gameObj.getOpponentOf(con);
-
+    console.log(message);
     if (gameObj.isTurnOf(con)) {
       //can do it only if it is your turn
       //dice rolled
