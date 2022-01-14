@@ -156,3 +156,20 @@ state.base.addEventListener("click", (e) => {
   movePawn("base");
   unhighlightPawns();
 });
+
+
+
+console.log(Messages.T_WIN);
+const socket = new WebSocket("ws://localhost:3000");
+socket.onmessage = function (event) {
+    console.log("Server message:  "+event.data);
+    if(event.data == "YOUR TURN"){
+      socket.send(`DICE ROLLED`);
+      //socket.send(`MOVE:3`);
+    }
+};
+
+socket.onopen = function () {
+    socket.send("START-GAME");
+    console.log("Sending a first message to the server ...");
+};
