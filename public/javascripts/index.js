@@ -161,6 +161,21 @@ const socket = new WebSocket("ws://localhost:3000");
 socket.onmessage = function (event) {
   console.log("Server message:  " + event.data);
   let incomingMsg = JSON.parse(event.data);
+  //show waiting screen
+  if (incomingMsg.type == Messages.T_WAIT) {
+    console.log("Showing waiting screen");
+  } else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
+    let playerType = incomingMsg.data;
+    console.log(`Starting game as player ${playerType}`);
+  } else if (incomingMsg.type == Messages.T_START) {
+    console.log("Game starts");
+  } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
+    console.log("It is your turn");
+  } else if (incomingMsg.type == Messages.T_OPP_TURN) {
+    console.log("It is opponent turn");
+  } else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
+    console.log("You rolled ...");
+  }
 };
 
 socket.onopen = function () {

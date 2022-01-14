@@ -40,6 +40,10 @@ wss.on("connection", function (ws) {
   //starting of the game
   const con = ws;
   con["id"] = numberOfPlayers++;
+  // if (currentGame.isGameOver() != false) {
+  //   currentGame = new Game();
+  //   gameID++;
+  // }
   const playerType = currentGame.addPlayer(con); // returning type of the player
   websockets[con["id"]] = currentGame;
 
@@ -152,6 +156,10 @@ wss.on("connection", function (ws) {
       }
       gameObj.endGame();
       console.log("Game ended");
+      if (opponent == null) {
+        currentGame = new Game();
+        gameID++;
+      }
     }
   });
 });
