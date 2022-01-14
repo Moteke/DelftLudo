@@ -236,7 +236,8 @@ class Game {
     by the provided WebSocket
   */
   getOpponentOf = (ws) => {
-    return this.players.find((p) => p.ws != ws).ws;
+    if (this.players.length > 1) return this.players.find((p) => p.ws != ws).ws;
+    return null;
   };
 
   /*
