@@ -126,7 +126,8 @@ wss.on("connection", function (ws) {
           console.log("Player A closing: " + e);
         }
       }
-      //gameObj.setFinalStatus("ABORTED"); needed to be done
+      gameObj.endGame();
+      console.log("Game ended");
     }
   });
 });
