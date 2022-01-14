@@ -44,7 +44,12 @@ class Game {
         ? this.boardData.blueStart
         : this.boardData.blackStart;
 
-    // safe base moves
+    /*
+      Moving the pawn in the base
+      
+      We must check if there are no pawns blocking our way to the desired position
+      as 'jumping over pawns' is not possible in the base
+    */
     if (
       typeof from === "string" &&
       (from.startsWith("black") || from.startsWith("blue"))
@@ -54,15 +59,31 @@ class Game {
       if (start < 1 || start + this.lastDice > 5) return false; // out of bound
 
       const desiredLocation = `${parts[0]}-${start + this.lastDice}`;
-      if (this.players[this.nextToMove].positions.includes(desiredLocation)) {
-        // there is a pawn in this place
+      const locationsToCheck = [];
+      // generate locations that we need to check
+      for (let i = start + 1; i <= start + this.lastDice; i++) {
+        locationsToCheck.push(`${parts[0]}-${i}`);
+      }
+
+      // check if there are any pawns that can block our move
+      if (
+        locationsToCheck.some((el) =>
+          this.players[this.nextToMove].positions.includes(el)
+        )
+      ) {
         return false;
       }
 
       return desiredLocation; // we can move there!
     }
 
-    // entering bases
+    /*
+      Entering bases type of move
+
+      We must check if there are no pawns blocking our way to the desired position
+      as 'jumping over pawns' is not possible in the base
+    */
+
     if (
       from + this.lastDice > this.boardData.blueBaseEntrance &&
       this.nextToMove === 0
@@ -71,10 +92,19 @@ class Game {
       const basePos = from + this.lastDice - this.boardData.blueBaseEntrance;
 
       const desiredLocation = `blue-${basePos}`;
-      if (this.players[this.nextToMove].positions.includes(desiredLocation)) {
-        // there is a pawn in this place
+      const locationsToCheck = [];
+      for (let i = 1; i <= basePos; i++) {
+        locationsToCheck.push(`blue-${i}`);
+      }
+
+      if (
+        locationsToCheck.some((el) =>
+          this.players[this.nextToMove].positions.includes(el)
+        )
+      ) {
         return false;
       }
+
       return desiredLocation;
     }
     if (
@@ -86,10 +116,19 @@ class Game {
       const basePos = from + this.lastDice - this.boardData.blackBaseEntrance;
 
       const desiredLocation = `black-${basePos}`;
-      if (this.players[this.nextToMove].positions.includes(desiredLocation)) {
-        // there is a pawn in this place
+      const locationsToCheck = [];
+      for (let i = 1; i <= basePos; i++) {
+        locationsToCheck.push(`black-${i}`);
+      }
+
+      if (
+        locationsToCheck.some((el) =>
+          this.players[this.nextToMove].positions.includes(el)
+        )
+      ) {
         return false;
       }
+
       return desiredLocation;
     }
 
@@ -106,7 +145,6 @@ class Game {
     let index = opponentPositions.findIndex((el) => el === fromPos);
 
     while (index != -1) {
-      console.log("Killing...");
       opponentPositions[index] = 0;
       index = opponentPositions.findIndex((el) => el === fromPos);
     }
