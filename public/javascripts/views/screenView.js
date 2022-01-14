@@ -1,3 +1,5 @@
+import { elements } from "./base.js";
+
 export const deactiveScreenWithMessage = (msg) => {
   const markup = `
     <div class="modal">
@@ -5,14 +7,15 @@ export const deactiveScreenWithMessage = (msg) => {
     </div>
   `;
 
-  document.querySelector("body").insertAdjacentHTML("afterBegin", markup);
+  elements.body.insertAdjacentHTML("afterBegin", markup);
 };
 
 export const activateScreen = () => {
+  // can't export .modal selector to elements because it is dynamic
   const modal = document.querySelector(".modal");
   if (modal) modal.remove();
 };
 
 export const renderMessage = (msg) => {
-  document.querySelector(".message").textContent = msg;
+  elements.message.textContent = msg;
 };
