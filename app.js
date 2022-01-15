@@ -46,7 +46,13 @@ setInterval(function () {
     if (gameObj.isGameOver()) {
       delete websockets[i];
       console.log(`Deleting game of player with ID${i}`);
-      statistics.games_played++;
+      //To properly count played games
+      if (!statistics.checker) {
+        statistics.games_played++;
+        statistics.checker = true;
+      } else {
+        statistics.checker = false;
+      }
     }
   }
 }, 10000);
@@ -190,6 +196,7 @@ wss.on("connection", function (ws) {
       gameObj.endGame();
       console.log("Game ended");
       if (opponent == null) {
+        statistics.waiting--;
         currentGame = new Game();
       }
     }
@@ -202,7 +209,8 @@ const statistics = {
   waiting: 0,
   games_played: 0,
   fastest_victory: "not known",
+  checker: false,
 };
 setInterval(() => {
   console.log(statistics);
-}, 15000);
+}, 100000);
