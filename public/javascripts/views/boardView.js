@@ -25,6 +25,19 @@ export const removePawnFrom = (selector, color) => {
   selector.querySelector(`.pawn--${color}`).remove();
 };
 
+export const placePawn = (pos, color) => {
+  const step = document.querySelector(`[data-step-id='${pos}']`);
+  placePawnIn(step, color);
+};
+
+export const placePawnIn = (selector, color) => {
+  const markup = `
+  <div class="pawn pawn--${color}"></div>
+  `;
+
+  selector.insertAdjacentHTML("beforeEnd", markup);
+};
+
 export const hideNormalDice = () => {
   elements.visibleDiceImage.classList.remove("dice__image--visible");
 
