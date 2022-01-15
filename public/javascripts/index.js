@@ -17,8 +17,6 @@ const state = {
   },
 };
 
-boardView.activateDice();
-
 // promises to make good dice rolling animation
 const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
