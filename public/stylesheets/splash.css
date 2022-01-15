@@ -48,12 +48,6 @@ header {
   height: 100%;
 }
 
-main {
-  /* height: 60vh;
-  display: flex;
-  flex-direction: column;; */
-}
-
 .navigation {
   width: 100%;
   display: flex;
@@ -81,9 +75,6 @@ main {
   cursor: pointer;
   background-color: rgba(0, 166, 214, 1);
   color: #fff;
-}
-
-.navigation__btn:active {
 }
 
 .navigation__btn:not(:last-child) {

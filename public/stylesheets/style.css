@@ -83,6 +83,7 @@ body {
 .row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .board__container {
@@ -289,4 +290,20 @@ body {
   width: 100%;
   color: #fff;
   cursor: none;
+}
+
+.skip-turn__btn{
+  font-size: 40px;
+  font-weight: 300;
+  color:rgba(0, 166, 214, 1);
+  border: 2px solid rgba(0, 166, 214, 1);
+  padding: 10px 40px;
+  transition: all 0.2s;
+}
+
+.skip-turn__btn:hover{
+  cursor: pointer;
+  background-color: rgba(0, 166, 214, 1);
+  color: #fff;
+
 }
