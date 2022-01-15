@@ -23,6 +23,7 @@ class Game {
   nextToMove = 0;
   lastDice = 0;
   rolled = false;
+  timer = null;
   boardData = {
     blueBaseEntrance: 36,
     blackBaseEntrance: 18,
@@ -297,7 +298,14 @@ class Game {
     if (blackWin) return this.players[1].ws;
     return false;
   };
-  startTimer = () => {};
+  startTimer = () => {
+    const currentDate = new Date();
+    this.timer = currentDate.getTime();
+  };
+  stopTimer = () => {
+    const currentDate = new Date();
+    return currentDate.getTime() - this.timer;
+  };
 }
 
 module.exports = Game;
