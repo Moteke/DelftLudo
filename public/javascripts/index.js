@@ -103,6 +103,7 @@ socket.onmessage = function (event) {
     let pos = incomingMsg.activePositions;
     if (pos.length == 0) {
       console.log("There are no possible moves");
+      socket.send(Messages.S_SKIPPED);
     } else {
       state.canMove = true;
       console.log(`Possibble moves are: ${pos}`);

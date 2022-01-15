@@ -65,6 +65,7 @@ wss.on("connection", function (ws) {
   //response messages
   con.on("message", function incoming(message) {
     const oMsg = JSON.parse(message.toString());
+    console.log(oMsg);
     const gameObj = websockets[con["id"]];
     const opponent = gameObj.getOpponentOf(con);
     if (gameObj.isTurnOf(con)) {
@@ -132,6 +133,16 @@ wss.on("connection", function (ws) {
             }
           }
         }
+      }
+    }
+    if (oMsg.type == messages.T_SKIPPED) {
+      console.log("SKIPPING");
+      if (gameObj.isTurnOf(con)) {
+        con.send(messages.S_YOUR_TURN);
+        opponent.send(messages.S_OPP_TURN);
+      } else {
+        con.send(messages.S_OPP_TURN);
+        opponent.send(messages.S_YOUR_TURN);
       }
     }
   });

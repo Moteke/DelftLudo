@@ -90,6 +90,11 @@
     to: null,
     color: null,
   };
+  exports.T_SKIPPED = "SKIPPED";
+  exports.O_SKIPPED = {
+    type: exports.T_SKIPPED,
+  };
+  exports.S_SKIPPED = JSON.stringify(exports.O_SKIPPED);
   //Sent from server about win/lose/aborted
   exports.T_WIN = "WIN";
   exports.O_WIN = {

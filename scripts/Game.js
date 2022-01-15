@@ -194,8 +194,7 @@ class Game {
   };
 
   rollDice = () => {
-    // this.lastDice = Math.floor((Math.random() * 10000) % 6) + 1;
-    this.lastDice = 6;
+    this.lastDice = Math.floor((Math.random() * 10000) % 6) + 1;
     this.rolled = true;
 
     const possibleMoves = this._getPossibleMoves();
