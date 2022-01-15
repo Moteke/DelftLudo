@@ -19,10 +19,13 @@ const state = {
   timer: null,
 };
 
+const debugURL = `localhost:3000`;
+const productionURL = `null`;
+
 /*
   MESSAGE HANDLER
 */
-const socket = new WebSocket("ws://localhost:3000");
+const socket = new WebSocket(`ws://${productionURL || debugURL}`);
 
 socket.onmessage = function (event) {
   console.log("Server message:  " + event.data);
