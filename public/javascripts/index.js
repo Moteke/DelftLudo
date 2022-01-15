@@ -25,7 +25,7 @@ const productionURL = `delft-ludo.herokuapp.com/`;
 /*
   MESSAGE HANDLER
 */
-const socket = new WebSocket(`ws://${productionURL || debugURL}`);
+const socket = new WebSocket(`ws://${productionURL}`);
 
 socket.onmessage = function (event) {
   console.log("Server message:  " + event.data);
