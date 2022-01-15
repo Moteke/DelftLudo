@@ -18,6 +18,10 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public")); // allow to access public files directly
 
+/*
+  ROUTES
+*/
+
 app.get("/", (req, res) => {
   res.render("splash");
 });
@@ -25,6 +29,8 @@ app.get("/", (req, res) => {
 app.get("/play", (req, res) => {
   res.render("game");
 });
+
+app.get("/rules", (req, res) => res.render("rules"));
 
 /***************
 Web Socket 

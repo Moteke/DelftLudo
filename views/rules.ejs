@@ -5,38 +5,54 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delft Ludo game</title>
-    <link rel="stylesheet" href="/stylesheets/splash.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="/stylesheets/rules.css" />
   </head>
   <body class="container">
     <div class="content">
       <nav class="navigation">
         <ul>
           <li class="navigation__btn">
-            <a href="/play" class="navigation__link">Play</a>
+            <a href="/" class="navigation__link">Return</a>
           </li>
         </ul>
       </nav>
-      <main>
-        <div class="statistics">
-          <ul class="statistics__list">
-            <li class="statistics__item">
-              Players:
-              <ul>
-                <li>in-game: 6</li>
-                <li>waiting: 1</li>
-              </ul>
-            </li>
-            <li class="statistics__item">Games played today: 12</li>
-            <li class="statistics__item">Fastest victory: 1:23</li>
-          </ul>
+      <main id="main">
+        <h1 class="title">How to play?</h1>
+        <div class="card__container">
+          <div class="card">
+            <div class="card__details">
+              <div class="card__number">01</div>
+              <div class="card__title">Starting the game</div>
+            </div>
+            <div class="card__content"><p>You need to roll 6 to leave the base. Your goal is to enter the 'safe zone' (blue or black path in the middle) with all of your pawns.</p></div>
+          </div>
+          <div class="card">
+            <div class="card__details">
+              <div class="card__number">02</div>
+              <div class="card__title">Capturing pawns</div>
+            </div>
+            <div class="card__content">
+              <p>Once you land on the square with opponent's pawn(s), you can capture them and send back to the base. However, pawns of either team can't be captured on the starting, colored squares.</p></div>
+          </div>
+          <div class="card">
+            <div class="card__details">
+              <div class="card__number">03</div>
+              <div class="card__title">Moving the pawns</div>
+            </div>
+            <div class="card__content">
+              <p>This version of Ludo does not include forming blocks out of 2 pawns standing on the same square - they cannot block the opponent and can be both captured at the same time.</p>
+              <p>Although while moving through the normal squares you can jump over other pawns, you cannot do this in the safe zone - consider it while trying to place all pawns in there and avoid blocking yourself! </p>
+            </div>
+          </div>
         </div>
-        <div></div>
-      </main>
+      </mainc>
     </div>
   </body>
 </html>
