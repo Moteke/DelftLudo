@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
     playersOnline: statistics.players,
     playersWaiting: statistics.waiting,
     gamesPlayed: statistics.games_played,
-    fastestVictory: statistics.fastest_victory,
+    fastestVictory: msToTime(statistics.fastest_victory),
   });
 });
 
@@ -85,6 +85,7 @@ wss.on("connection", function (ws) {
     const opponent = currentGame.getOpponentOf(con);
     opponent.send(messages.S_START);
     con.send(messages.S_START);
+    currentGame.startTimer();
     opponent.send(messages.S_YOUR_TURN);
     con.send(messages.S_OPP_TURN);
     currentGame = new Game();
@@ -159,6 +160,14 @@ wss.on("connection", function (ws) {
             }
             //if this client is winner
             else if (gameStatus.winner == con) {
+              const time = gameObj.stopTimer();
+              console.log("in");
+              if (
+                statistics.fastest_victory == "not known" ||
+                statistics.fastest_victory < time
+              ) {
+                statistics.fastest_victory = time;
+              }
               con.send(messages.S_WIN);
               opponent.send(messages.S_LOSE);
             }
@@ -202,10 +211,12 @@ wss.on("connection", function (ws) {
           console.log(`There's been an error: ${e}`);
         }
       }
+
       gameObj.endGame();
       console.log("Game ended");
       if (opponent == null) {
         statistics.waiting--;
+        statistics.players++;
         currentGame = new Game();
       }
     }
@@ -220,6 +231,15 @@ const statistics = {
   fastest_victory: "not known",
   checker: false,
 };
-setInterval(() => {
-  console.log(statistics);
-}, 100000);
+function msToTime(time) {
+  if (time != "not known") {
+    var ms = time % 1000;
+    var s = (time - ms) / 1000;
+    var sec = s % 60;
+    s = (s - sec) / 60;
+    var mins = s % 60;
+    return mins + ":" + sec + "." + ms;
+  } else {
+    return "not known";
+  }
+}
