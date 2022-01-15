@@ -85,12 +85,11 @@ socket.onmessage = function (event) {
     screenView.activateScreen();
     screenView.renderMessage("Time to start!");
   } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
-    boardView.unhighlightAllPawns();
     state.canRoll = true;
+    boardView.activateDice();
     console.log("It is your turn");
     screenView.renderMessage("Time to roll!");
   } else if (incomingMsg.type == Messages.T_OPP_TURN) {
-    boardView.unhighlightAllPawns();
     state.canRoll = false;
     state.canMove = false;
     console.log("It is opponent turn");
@@ -117,7 +116,7 @@ socket.onmessage = function (event) {
     let msg = incomingMsg;
     console.log(msg);
     boardView.removePawn(msg.from, msg.color);
-    //add pawn(needed to be added)
+    boardView.addPawn(msg.to, msg.color);
   }
 };
 
@@ -183,6 +182,7 @@ const handlePawnClick = (e) => {
     console.log("Step move!");
   }
   socket.send(JSON.stringify(x));
+  boardView.unhighlightAllPawns();
 };
 
 const init = () => {
