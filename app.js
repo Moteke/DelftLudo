@@ -173,6 +173,14 @@ wss.on("connection", function (ws) {
             }
             //if the opponent is winner
             else {
+              const time = gameObj.stopTimer();
+              console.log("in");
+              if (
+                statistics.fastest_victory == "not known" ||
+                statistics.fastest_victory < time
+              ) {
+                statistics.fastest_victory = time;
+              }
               con.send(messages.S_LOSE);
               opponent.send(messages.S_WIN);
             }
