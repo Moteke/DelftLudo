@@ -101,27 +101,37 @@ socket.onmessage = function (event) {
   if (incomingMsg.type == Messages.T_WAIT) {
     console.log("Showing waiting screen");
     screenView.deactiveScreenWithMessage("Waiting for another player...");
-  } else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
+  }
+  //Receive type of player
+  else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
     playerType = incomingMsg.data;
     console.log(`Starting game as player ${playerType}`);
     console.log(incomingMsg);
     state.base = document.querySelector(
       `.base--${playerType === 1 ? "blue" : "black"}`
     );
-  } else if (incomingMsg.type == Messages.T_START) {
+  }
+  //Receive "START" message
+  else if (incomingMsg.type == Messages.T_START) {
     console.log("Game starts");
     init();
     screenView.activateScreen();
     screenView.renderMessage("Time to start!");
-  } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
+  }
+  //Receive my turn message
+  else if (incomingMsg.type == Messages.T_YOUR_TURN) {
     active = true;
     console.log("It is your turn");
     screenView.renderMessage("Time to roll!");
-  } else if (incomingMsg.type == Messages.T_OPP_TURN) {
+  }
+  //Receive Opponent turn message
+  else if (incomingMsg.type == Messages.T_OPP_TURN) {
     active = false;
     console.log("It is opponent turn");
     screenView.renderMessage("Waiting for the opponent to move...");
-  } else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
+  }
+  //Receive you rolled message
+  else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
     state.receivedDice = true;
     state.diceNumber = incomingMsg.data;
     console.log(`You rolled ${incomingMsg.data}`);
@@ -137,6 +147,12 @@ socket.onmessage = function (event) {
         );
       }
     }
+  }
+  //Receive move message
+  else if (incomingMsg.type == Messages.T_MOVE) {
+    let msg = incomingMsg;
+    boardView.removePawn(msg.from, msg.color);
+    //add pawn(needed to be added)
   }
 };
 
