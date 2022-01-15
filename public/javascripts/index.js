@@ -38,34 +38,6 @@ const socketWait = (state) => {
   });
 };
 
-// *****************
-// BOARD
-
-const highlightPawns = (diceNum) => {
-  if (diceNum == 6) {
-    // highlight base pawns
-    const basePawns = state.base.querySelectorAll(".pawn");
-    basePawns.forEach((el) => {
-      el.classList.add("pawn--glow");
-    });
-  }
-
-  // highligh board pawns
-  const boardPawns = document
-    .querySelector(".board")
-    .querySelectorAll(state.pawn);
-
-  boardPawns.forEach((el) => {
-    el.classList.add("pawn--glow");
-  });
-};
-
-const unhighlightPawns = () => {
-  document
-    .querySelectorAll(".pawn--glow")
-    .forEach((el) => el.classList.remove("pawn--glow"));
-};
-
 // ************************
 // PAWN MOVEMENT
 
@@ -88,7 +60,6 @@ const movePawn = (from, to) => {
   }
 };
 
-let playerType;
 const socket = new WebSocket("ws://localhost:3000");
 socket.onmessage = function (event) {
   console.log("Server message:  " + event.data);
@@ -100,9 +71,8 @@ socket.onmessage = function (event) {
   }
   //Receive type of player
   else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
-    playerType = incomingMsg.data;
+    let playerType = incomingMsg.data;
     console.log(`Starting game as player ${playerType}`);
-    console.log(incomingMsg);
     // set user data to state
     state.playerData = {
       id: playerType,

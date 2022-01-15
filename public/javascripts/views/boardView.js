@@ -16,9 +16,16 @@ export const highlightPawnsIn = (selector) => {
     .forEach((e) => e.classList.add("pawn--glow"));
 };
 
+export const unhighlightAllPawns = () => {
+  document
+    .querySelectorAll(".pawn--glow")
+    .forEach((el) => el.classList.remove("pawn--glow"));
+};
+
 export const removePawn = (pos, color) => {
-  const step = document.querySelector(`[data-step-id='${pos}']`);
-  removePawnFrom(step, color);
+  let selector = document.querySelector(`[data-step-id='${pos}']`);
+  if (pos === 0) selector = document.querySelector(`.base--${color}`);
+  removePawnFrom(selector, color);
 };
 
 export const removePawnFrom = (selector, color) => {
@@ -26,8 +33,12 @@ export const removePawnFrom = (selector, color) => {
 };
 
 export const placePawn = (pos, color) => {
-  const step = document.querySelector(`[data-step-id='${pos}']`);
-  placePawnIn(step, color);
+  let selector = document.querySelector(`[data-step-id='${pos}']`);
+  if (pos === 0)
+    selector = document
+      .querySelector(`.base--${color}`)
+      .querySelector(".base__square");
+  placePawnIn(selector, color);
 };
 
 export const placePawnIn = (selector, color) => {
