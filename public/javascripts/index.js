@@ -221,3 +221,14 @@ const init = () => {
   state.base.addEventListener("click", handlePawnClick);
   elements.skipTurn.addEventListener("click", handleSkipBtnClick);
 };
+
+window.onbeforeunload = (e) => {
+  e.preventDefault();
+  return (e.returnValue =
+    "Are you sure you want to leave? The game will be ended as if you lost.");
+};
+
+// window.addEventListener("beforeunload", (e) => {
+//   delete e["returnValue"];
+//   return "Are you sure you want to leave? The game will be ended as if you lost.";
+// });

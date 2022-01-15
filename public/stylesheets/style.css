@@ -40,15 +40,22 @@ body {
 
 .navigation__item {
   display: inline-block;
-  /* height: 100%; */
+}
+
+.navigation__item--timer{
   padding: 10px 20px;
 }
 
-.navigation__item--clickable {
+.navigation__link{
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding: 10px 20px;
+  text-transform: uppercase;
   transition: background-color 0.3s;
 }
 
-.navigation__item--clickable:hover {
+.navigation__link:hover{
   cursor: pointer;
   background-color: rgb(35, 202, 248);
 }
@@ -275,11 +282,18 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 900;
   backdrop-filter: blur(3px);
-
   display: flex;
   align-items: center;
+
+  opacity: 0;
+  z-index: -900;
+  transition: 0.3s all;
+}
+
+.modal--visible{
+  z-index: 900;
+  opacity: 1;
 }
 
 .modal__message {
@@ -306,3 +320,4 @@ body {
   background-color: rgba(0, 166, 214, 1);
   color: #fff;
 }
+
