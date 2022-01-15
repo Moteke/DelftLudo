@@ -295,7 +295,11 @@ class Game {
         blackWin = false;
     });
 
-    if (blackWin) return this.players[1].ws;
+    if (blackWin)
+      return {
+        winner: this.players[1].ws,
+        loser: this.player[0].ws,
+      };
     return false;
   };
   startTimer = () => {
