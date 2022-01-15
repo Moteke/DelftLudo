@@ -34,7 +34,16 @@ let numberOfPlayers = 0;
 let gameID = 0;
 let currentGame = new Game();
 
-//CLEANING OF THE GAME OBJECTS NEEDED TO BE DONE
+//CLEANING OF THE GAME OBJECTS
+setInterval(function () {
+  for (let i in websockets) {
+    let gameObj = websockets[i];
+    //if the gameObj has a final status, the game is complete/aborted
+    if (gameObj.finalStatus != null) {
+      delete websockets[i];
+    }
+  }
+}, 50000);
 
 wss.on("connection", function (ws) {
   //starting of the game
@@ -98,14 +107,15 @@ wss.on("connection", function (ws) {
         }
         //NORMAL MOVE
         else {
-          let response = messages.O_MOVE;
-          response.from = madeMove.from;
-          response.to = madeMove.to;
-          response.color = madeMove.color;
-          console.log(response);
-          con.send(JSON.stringify(response));
-          opponent.send(JSON.stringify(response));
-
+          for (let i = 0; i < madeMove.length; i++) {
+            let response = messages.O_MOVE;
+            response.from = madeMove[i].from;
+            response.to = madeMove[i].to;
+            response.color = madeMove[i].color;
+            console.log(response);
+            con.send(JSON.stringify(response));
+            opponent.send(JSON.stringify(response));
+          }
           //check for the move changing
           if (gameObj.isTurnOf(con)) {
             con.send(messages.S_YOUR_TURN);
