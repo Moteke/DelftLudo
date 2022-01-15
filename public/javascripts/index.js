@@ -84,6 +84,7 @@ socket.onmessage = function (event) {
     console.log("Game starts");
     init();
     screenView.activateScreen();
+    screenView.activateTimer();
     screenView.renderMessage("Time to start!");
   } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
     boardView.activateDice();
