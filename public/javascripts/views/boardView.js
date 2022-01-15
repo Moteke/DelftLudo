@@ -82,3 +82,10 @@ export const startDiceShaking = () => {
 export const stopDiceShaking = () => {
   elements.dice.classList.remove("dice--shake");
 };
+
+/*
+  WARNING: Irreversible operation! Should be called only at the end of the game!
+*/
+export const removeDice = () => {
+  elements.dice.remove();
+};
