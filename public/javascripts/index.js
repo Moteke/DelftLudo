@@ -186,8 +186,20 @@ const handlePawnClick = (e) => {
   boardView.unhighlightAllPawns();
 };
 
+/*
+  Handling clicking the skip button to skip the turn
+*/
+
+const handleSkipBtnClick = (e) => {
+  const target = e.target.closest(".skip-turn__btn");
+  if (!target) return;
+
+  // TODO: what should happen when someone clicks the button
+};
+
 const init = () => {
   elements.dice.addEventListener("click", handleDiceClick);
   elements.board.addEventListener("click", handlePawnClick);
   state.base.addEventListener("click", handlePawnClick);
+  elements.skipTurn.addEventListener("click", handleSkipBtnClick);
 };
