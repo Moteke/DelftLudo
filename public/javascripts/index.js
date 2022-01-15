@@ -1,6 +1,7 @@
 import * as boardView from "./views/boardView.js";
 import * as screenView from "./views/screenView.js";
 
+import * as utils from "./utils.js";
 import { elements } from "./views/base.js";
 
 // ****************
@@ -16,20 +17,6 @@ const state = {
     possibleMoves: [],
   },
   timer: null,
-};
-
-// promises to make good dice rolling animation
-const sleep = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
-
-const socketWait = (state) => {
-  return new Promise(async (resolve) => {
-    while (!state.receivedDice) {
-      await sleep(100);
-    }
-    resolve("cool");
-  });
 };
 
 /*
@@ -105,21 +92,22 @@ socket.onmessage = function (event) {
 
     case Messages.T_ABORTED:
       console.log("Game aborted");
-      clearInterval(state.timer);
+      endGameBehavior();
       screenView.renderMessage("Your opponent left. Game Over");
       break;
 
     case Messages.T_WIN:
       console.log("You won");
-      clearInterval(state.timer);
+      endGameBehavior();
       screenView.renderMessage("Congratulations! You won the game!");
       break;
 
     case Messages.T_LOSE:
       console.log("You lose");
-      clearInterval(state.timer);
+      endGameBehavior();
       screenView.renderMessage("The game ended! You lose!");
       break;
+
     case Messages.T_OPP_ROLLED:
       const dice = incomingMsg.data;
       console.log(`Opponent rolled ${dice}`);
@@ -156,7 +144,7 @@ const handleDiceClick = async (e) => {
       'await' keyword is what allows us to stop the execution. It's called async await mechanism.
       https://javascript.info/async-await
     */
-  await Promise.all([sleep(1000), socketWait(state)]);
+  await Promise.all([utils.sleep(1000), utils.socketWait(state)]);
   boardView.stopDiceShaking();
   screenView.renderMessage(`You rolled ${state.diceNumber}!`);
   boardView.showSpecificDice(state.diceNumber);
@@ -211,9 +199,20 @@ const handleSkipBtnClick = (e) => {
   const target = e.target.closest(".skip-turn__btn");
   if (!target) return;
 
-  // TODO: what should happen when someone clicks the button
   socket.send(Messages.S_SKIPPED);
   screenView.removeSkipBtn();
+};
+
+/*
+  The function to gather together things that happen once the game is ended.
+*/
+
+const endGameBehavior = () => {
+  clearInterval(state.timer);
+  boardView.removeDice();
+  state.canMove = false;
+  state.canRoll = false;
+  boardView.unhighlightAllPawns();
 };
 
 const init = () => {
