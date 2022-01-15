@@ -85,8 +85,8 @@ socket.onmessage = function (event) {
     screenView.activateScreen();
     screenView.renderMessage("Time to start!");
   } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
-    state.canRoll = true;
     boardView.activateDice();
+    state.canRoll = true;
     console.log("It is your turn");
     screenView.renderMessage("Time to roll!");
   } else if (incomingMsg.type == Messages.T_OPP_TURN) {
