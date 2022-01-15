@@ -88,6 +88,13 @@ wss.on("connection", function (ws) {
         //INVALID MOVE
         if (madeMove == "InvalidMove") {
           con.send(messages.S_INVALID);
+          if (gameObj.isTurnOf(con)) {
+            con.send(messages.S_YOUR_TURN);
+            opponent.send(messages.S_OPP_TURN);
+          } else {
+            con.send(messages.S_OPP_TURN);
+            opponent.send(messages.S_YOUR_TURN);
+          }
         }
         //NORMAL MOVE
         else {
