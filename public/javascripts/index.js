@@ -126,7 +126,7 @@ socket.onmessage = function (event) {
     state.diceNumber = incomingMsg.data;
     console.log(`You rolled ${incomingMsg.data}`);
     let pos = incomingMsg.activePositions;
-    if (pos == []) {
+    if (pos.length == 0) {
       console.log("There are no possible moves");
     } else {
       console.log(`Possibble moves are: ${pos}`);
