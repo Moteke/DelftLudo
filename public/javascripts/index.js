@@ -38,10 +38,6 @@ const socketWait = (state) => {
   });
 };
 
-// ****************
-// DICE
-let active = false;
-
 // *****************
 // BOARD
 
@@ -107,26 +103,24 @@ socket.onmessage = function (event) {
     playerType = incomingMsg.data;
     console.log(`Starting game as player ${playerType}`);
     console.log(incomingMsg);
-    state.base = document.querySelector(
-      `.base--${playerType === 1 ? "blue" : "black"}`
-    );
-  }
-  //Receive "START" message
-  else if (incomingMsg.type == Messages.T_START) {
+    // set user data to state
+    state.playerData = {
+      id: playerType,
+      color: playerType === 1 ? "blue" : "black",
+    };
+    state.base = document.querySelector(`.base--${state.playerData.color}`);
+  } else if (incomingMsg.type == Messages.T_START) {
     console.log("Game starts");
     init();
     screenView.activateScreen();
     screenView.renderMessage("Time to start!");
-  }
-  //Receive my turn message
-  else if (incomingMsg.type == Messages.T_YOUR_TURN) {
-    active = true;
+  } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
+    state.canRoll = true;
     console.log("It is your turn");
     screenView.renderMessage("Time to roll!");
-  }
-  //Receive Opponent turn message
-  else if (incomingMsg.type == Messages.T_OPP_TURN) {
-    active = false;
+  } else if (incomingMsg.type == Messages.T_OPP_TURN) {
+    state.canRoll = false;
+    state.canMove = false;
     console.log("It is opponent turn");
     screenView.renderMessage("Waiting for the opponent to move...");
   }
@@ -160,22 +154,23 @@ socket.onopen = function () {
   console.log("Connected to the browser");
 };
 
-const init = () => {
-  elements.dice.addEventListener("click", async (e) => {
-    if (!active) return;
-    else active = false;
+/*
+  Handle clicking the dice
+*/
 
-    const { target } = e;
+const handleDiceClick = async (e) => {
+  if (!state.canRoll) return;
+  else state.canRoll = false;
 
-    // hide the normal dice and show the 0 one
-    boardView.hideNormalDice();
+  // hide the normal dice and show the 0 one
+  boardView.hideNormalDice();
 
-    // add animation for 1 second
-    boardView.startDiceShaking();
-    state.receivedDice = false;
-    socket.send(Messages.S_DICE_ROLLED);
+  // add animation for 1 second
+  boardView.startDiceShaking();
+  state.receivedDice = false;
+  socket.send(Messages.S_DICE_ROLLED);
 
-    /*
+  /*
       What happens here is we wait for both Promises to resolve:
         - 1 second wait Promise
         - Promise that waits until we receive a dice number
@@ -183,41 +178,41 @@ const init = () => {
       'await' keyword is what allows us to stop the execution. It's called async await mechanism.
       https://javascript.info/async-await
     */
-    await Promise.all([sleep(1000), socketWait(state)]);
-    boardView.stopDiceShaking();
-    screenView.renderMessage(`You rolled ${state.diceNumber}!`);
-    boardView.showSpecificDice(state.diceNumber);
-    boardView.hideDice();
-  });
+  await Promise.all([sleep(1000), socketWait(state)]);
+  boardView.stopDiceShaking();
+  screenView.renderMessage(`You rolled ${state.diceNumber}!`);
+  boardView.showSpecificDice(state.diceNumber);
+  boardView.hideDice();
+};
 
-  elements.board.addEventListener("click", (e) => {
-    const pawn = e.target.closest(state.pawn);
-    if (!pawn || !pawn.classList.contains("pawn--glow")) {
-      return;
-    }
+/*
+  Handle clicking a pawn on the board on in the base
+*/
 
-    // console.log("you clicked your pawn!");
-    // send what user chose to do to the server
+const handlePawnClick = (e) => {
+  const pawn = e.target.closest(`.pawn--${state.playerData.color}`);
+  if (!pawn || !pawn.classList.contains("pawn--glow") || !state.canMove) {
+    return;
+  }
 
-    // if you receive OK move the pawn to the desired location
-    const currentPos = +pawn.closest(".board__step").dataset.stepId;
-    let pos = Math.floor((Math.random() * 10000) % 6) + 1;
-    console.log(
-      `Jumping from ${currentPos} to ${((currentPos + pos) % 36) + 1}`
-    );
-    movePawn(currentPos, ((currentPos + pos) % 36) + 1);
-    unhighlightPawns();
-  });
-  state.base.addEventListener("click", (e) => {
-    const pawn = e.target.closest(state.pawn);
-    if (pawn === null || !pawn.classList.contains("pawn--glow")) {
-      return;
-    }
-    // console.log("You clicked pawn");
-    // send what user chose to do to the server
+  const base = pawn.closest(`.base--${state.playerData.color}`);
+  const step = pawn.closest(".board__step");
 
-    // if you receive OK move the pawn to the desired location
-    movePawn("base");
-    unhighlightPawns();
-  });
+  if (base) {
+    // player wants to move from base
+    // TODO
+    console.log("Base move!");
+  }
+  if (step) {
+    // player wants to make a baord move
+    // TODO
+    const currentPos = +step.dataset.stepId;
+    console.log("Step move!");
+  }
+};
+
+const init = () => {
+  elements.dice.addEventListener("click", handleDiceClick);
+  elements.board.addEventListener("click", handlePawnClick);
+  state.base.addEventListener("click", handlePawnClick);
 };
