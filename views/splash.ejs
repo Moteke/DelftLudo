@@ -39,12 +39,12 @@
             <li class="statistics__item">
               Players:
               <ul>
-                <li>in-game: 6</li>
-                <li>waiting: 1</li>
+                <li>in-game: <%= playersOnline %></li>
+                <li>waiting: <%= playersWaiting %></li>
               </ul>
             </li>
-            <li class="statistics__item">Games played today: 12</li>
-            <li class="statistics__item">Fastest victory: 1:23</li>
+            <li class="statistics__item">Games played: <%= gamesPlayed %></li>
+            <li class="statistics__item">Fastest victory: <%= fastestVictory %></li>
           </ul>
         </div>
         <div></div>

@@ -69,14 +69,16 @@ socket.onmessage = function (event) {
     case Messages.T_YOUR_TURN:
       boardView.activateDice();
       state.canRoll = true;
-      console.log("It is your turn");
+      //console.log("It is your turn");
+      screenView.setTurnScreen(`Your's`);
       screenView.renderMessage("Time to roll!");
       break;
 
     case Messages.T_OPP_TURN:
       state.canRoll = false;
       state.canMove = false;
-      console.log("It is opponent turn");
+      //console.log("It is opponent turn");
+      screenView.setTurnScreen(`Opponent's`);
       screenView.renderMessage("Waiting for the opponent to move...");
       break;
 
@@ -117,6 +119,11 @@ socket.onmessage = function (event) {
       console.log("You lose");
       clearInterval(state.timer);
       screenView.renderMessage("The game ended! You lose!");
+      break;
+    case Messages.T_OPP_ROLLED:
+      const dice = incomingMsg.data;
+      console.log(`Opponent rolled ${dice}`);
+      screenView.renderMessage(`Opponent rolled ${dice}`);
       break;
   }
 };

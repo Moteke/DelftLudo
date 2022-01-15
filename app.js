@@ -23,7 +23,12 @@ app.use(express.static(__dirname + "/public")); // allow to access public files 
 */
 
 app.get("/", (req, res) => {
-  res.render("splash");
+  res.render("splash", {
+    playersOnline: statistics.players,
+    playersWaiting: statistics.waiting,
+    gamesPlayed: statistics.games_played,
+    fastestVictory: statistics.fastest_victory,
+  });
 });
 
 app.get("/play", (req, res) => {
@@ -48,10 +53,16 @@ setInterval(function () {
     if (gameObj.isGameOver()) {
       delete websockets[i];
       console.log(`Deleting game of player with ID${i}`);
-      statistics.games_played++;
+      //To properly count played games
+      if (!statistics.checker) {
+        statistics.games_played++;
+        statistics.checker = true;
+      } else {
+        statistics.checker = false;
+      }
     }
   }
-}, 60000);
+}, 10000);
 
 wss.on("connection", function (ws) {
   //starting the game
@@ -192,6 +203,7 @@ wss.on("connection", function (ws) {
       gameObj.endGame();
       console.log("Game ended");
       if (opponent == null) {
+        statistics.waiting--;
         currentGame = new Game();
       }
     }
@@ -203,8 +215,9 @@ const statistics = {
   players: 0,
   waiting: 0,
   games_played: 0,
-  fastest_victory: 0,
+  fastest_victory: "not known",
+  checker: false,
 };
 setInterval(() => {
   console.log(statistics);
-}, 15000);
+}, 100000);
