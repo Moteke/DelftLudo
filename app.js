@@ -42,34 +42,33 @@ setInterval(function () {
     if (gameObj.isGameOver()) {
       delete websockets[i];
       console.log(`Deleting game of player with ID${i}`);
+      statistics.games_played++;
     }
   }
 }, 60000);
 
 wss.on("connection", function (ws) {
-  //starting of the game
+  //starting the game
+  statistics.players++;
   const con = ws;
   con["id"] = numberOfPlayers++;
-  // if (currentGame.isGameOver() != false) {
-  //   currentGame = new Game();
-  //   gameID++;
-  // }
   const playerType = currentGame.addPlayer(con); // returning type of the player
   websockets[con["id"]] = currentGame;
 
   console.log(`Player ${con["id"]} placed in game ${gameID} as ${playerType}`);
   con.send(playerType == 1 ? messages.S_PLAYER_1 : messages.S_PLAYER_2);
   if (playerType == 1) {
+    statistics.waiting++;
     con.send(messages.S_WAIT);
   }
   if (playerType == 2) {
+    statistics.waiting--;
     const opponent = currentGame.getOpponentOf(con);
     opponent.send(messages.S_START);
     con.send(messages.S_START);
     opponent.send(messages.S_YOUR_TURN);
     con.send(messages.S_OPP_TURN);
     currentGame = new Game();
-    gameID++;
   }
 
   //response messages
@@ -165,6 +164,7 @@ wss.on("connection", function (ws) {
     }
   });
   con.on("close", function (code) {
+    statistics.players--;
     // const gameObj = websockets[con["id"]];
     // const opponent = gameObj.getOpponentOf(con);
     console.log(`Player ${con["id"]} disconnected ...`);
@@ -187,8 +187,18 @@ wss.on("connection", function (ws) {
       console.log("Game ended");
       if (opponent == null) {
         currentGame = new Game();
-        gameID++;
       }
     }
   });
 });
+
+///STATISTICS
+const statistics = {
+  players: 0,
+  waiting: 0,
+  games_played: 0,
+  fastest_victory: 0,
+};
+setInterval(() => {
+  console.log(statistics);
+}, 15000);
