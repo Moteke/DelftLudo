@@ -160,6 +160,7 @@ class Game {
     sent this request to make a move.
   */
   makeMove = (from) => {
+    const playerColor = this.playerColor[this.nextToMove];
     const to = this._validateMove(from);
     if (to === false) return "InvalidMove";
 
@@ -178,6 +179,7 @@ class Game {
     return {
       from,
       to,
+      color: playerColor,
     };
   };
 
