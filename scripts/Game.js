@@ -273,6 +273,7 @@ class Game {
   */
   isGameOver = () => {
     if (this.forcedEnd) return "ForcedEnd";
+    if (this.players.length < 2) return false;
     // check if blue pawns are in the base
     let blueWin = true;
     this.players[0].positions.forEach((el) => {
