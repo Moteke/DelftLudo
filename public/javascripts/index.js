@@ -116,7 +116,7 @@ socket.onmessage = function (event) {
     let msg = incomingMsg;
     console.log(msg);
     boardView.removePawn(msg.from, msg.color);
-    boardView.addPawn(msg.to, msg.color);
+    boardView.placePawn(msg.to, msg.color);
   }
 };
 
