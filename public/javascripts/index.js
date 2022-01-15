@@ -31,77 +31,89 @@ const socketWait = (state) => {
   });
 };
 
+/*
+  MESSAGE HANDLER
+*/
 const socket = new WebSocket("ws://localhost:3000");
+
 socket.onmessage = function (event) {
   console.log("Server message:  " + event.data);
   let incomingMsg = JSON.parse(event.data);
-  //show waiting screen
-  if (incomingMsg.type == Messages.T_WAIT) {
-    console.log("Showing waiting screen");
-    screenView.deactiveScreenWithMessage("Waiting for another player...");
-  }
-  //Receive type of player
-  else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
-    let playerType = incomingMsg.data;
-    console.log(`Starting game as player ${playerType}`);
-    // set user data to state
-    state.playerData = {
-      id: playerType,
-      color: playerType === 1 ? "blue" : "black",
-    };
-    state.base = document.querySelector(`.base--${state.playerData.color}`);
-  } else if (incomingMsg.type == Messages.T_START) {
-    console.log("Game starts");
-    init();
-    screenView.activateScreen();
-    screenView.activateTimer();
-    screenView.renderMessage("Time to start!");
-  } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
-    boardView.activateDice();
-    state.canRoll = true;
-    console.log("It is your turn");
-    screenView.renderMessage("Time to roll!");
-  } else if (incomingMsg.type == Messages.T_OPP_TURN) {
-    state.canRoll = false;
-    state.canMove = false;
-    console.log("It is opponent turn");
-    screenView.renderMessage("Waiting for the opponent to move...");
-  }
-  //Receive you rolled message
-  else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
-    state.receivedDice = true;
-    state.diceNumber = incomingMsg.data;
-    console.log(`You rolled ${incomingMsg.data}`);
-    let pos = incomingMsg.activePositions;
-    state.playerData.possibleMoves = incomingMsg.activePositions;
-    if (pos.length == 0) {
-      console.log("There are no possible moves");
-    } else {
-      state.canMove = true;
-      console.log(`Possibble moves are: ${pos}`);
-    }
-  }
-  //Receive move message
-  else if (incomingMsg.type == Messages.T_MOVE) {
-    let msg = incomingMsg;
-    console.log(msg);
-    boardView.removePawn(msg.from, msg.color);
-    boardView.placePawn(msg.to, msg.color);
-  }
-  //Receive aborted message
-  else if (incomingMsg.type == Messages.T_ABORTED) {
-    console.log("Game aborted");
-    screenView.renderMessage("Your opponent left. Game Over");
-  }
-  //Receive winner message
-  else if (incomingMsg.type == Messages.T_WIN) {
-    console.log("You won");
-    screenView.renderMessage("Congratulations! You won the game!");
-  }
-  //Receive loser message
-  else if (incomingMsg.type == Messages.T_LOSE) {
-    console.log("You lose");
-    screenView.renderMessage("The game ended! You lose!");
+
+  switch (incomingMsg.type) {
+    case Messages.T_WAIT:
+      console.log("Showing waiting screen");
+      screenView.deactiveScreenWithMessage("Waiting for another player...");
+      break;
+
+    case Messages.T_PLAYER_TYPE:
+      let playerType = incomingMsg.data;
+      console.log(`Starting game as player ${playerType}`);
+      // set user data to state
+      state.playerData = {
+        id: playerType,
+        color: playerType === 1 ? "blue" : "black",
+      };
+      state.base = document.querySelector(`.base--${state.playerData.color}`);
+      break;
+
+    case Messages.T_START:
+      console.log("Game starts");
+      init();
+      screenView.activateScreen();
+      screenView.activateTimer();
+      screenView.renderMessage("Time to start!");
+      break;
+
+    case Messages.T_YOUR_TURN:
+      boardView.activateDice();
+      state.canRoll = true;
+      console.log("It is your turn");
+      screenView.renderMessage("Time to roll!");
+      break;
+
+    case Messages.T_OPP_TURN:
+      state.canRoll = false;
+      state.canMove = false;
+      console.log("It is opponent turn");
+      screenView.renderMessage("Waiting for the opponent to move...");
+      break;
+
+    case Messages.T_YOU_ROLLED:
+      state.receivedDice = true;
+      state.diceNumber = incomingMsg.data;
+      console.log(`You rolled ${incomingMsg.data}`);
+      let pos = incomingMsg.activePositions;
+      state.playerData.possibleMoves = incomingMsg.activePositions;
+      if (pos.length == 0) {
+        console.log("There are no possible moves");
+      } else {
+        state.canMove = true;
+        console.log(`Possibble moves are: ${pos}`);
+      }
+      break;
+
+    case Messages.T_MOVE:
+      let msg = incomingMsg;
+      console.log(msg);
+      boardView.removePawn(msg.from, msg.color);
+      boardView.placePawn(msg.to, msg.color);
+      break;
+
+    case Messages.T_ABORTED:
+      console.log("Game aborted");
+      screenView.renderMessage("Your opponent left. Game Over");
+      break;
+
+    case Messages.T_WIN:
+      console.log("You won");
+      screenView.renderMessage("Congratulations! You won the game!");
+      break;
+
+    case Messages.T_LOSE:
+      console.log("You lose");
+      screenView.renderMessage("The game ended! You lose!");
+      break;
   }
 };
 
