@@ -49,3 +49,8 @@ export const activateTimer = () => {
     }
   }, 1000);
 };
+
+export const setTurnScreen = (player) => {
+  const turn = document.querySelector(".statistics__turn");
+  turn.textContent = `${player} turn`;
+};
