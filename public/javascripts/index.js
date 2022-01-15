@@ -15,6 +15,7 @@ const state = {
     color: "",
     possibleMoves: [],
   },
+  timer: null,
 };
 
 // promises to make good dice rolling animation
@@ -61,7 +62,7 @@ socket.onmessage = function (event) {
       console.log("Game starts");
       init();
       screenView.activateScreen();
-      screenView.activateTimer();
+      state.timer = screenView.activateTimer();
       screenView.renderMessage("Time to start!");
       break;
 
@@ -102,16 +103,19 @@ socket.onmessage = function (event) {
 
     case Messages.T_ABORTED:
       console.log("Game aborted");
+      clearInterval(state.timer);
       screenView.renderMessage("Your opponent left. Game Over");
       break;
 
     case Messages.T_WIN:
       console.log("You won");
+      clearInterval(state.timer);
       screenView.renderMessage("Congratulations! You won the game!");
       break;
 
     case Messages.T_LOSE:
       console.log("You lose");
+      clearInterval(state.timer);
       screenView.renderMessage("The game ended! You lose!");
       break;
   }
