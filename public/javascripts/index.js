@@ -13,6 +13,7 @@ const state = {
   playerData: {
     id: 0,
     color: "",
+    possibleMoves: [],
   },
 };
 
@@ -101,15 +102,12 @@ socket.onmessage = function (event) {
     state.diceNumber = incomingMsg.data;
     console.log(`You rolled ${incomingMsg.data}`);
     let pos = incomingMsg.activePositions;
+    state.playerData.possibleMoves = incomingMsg.activePositions;
     if (pos.length == 0) {
       console.log("There are no possible moves");
-      screenView.renderSkipBtn();
     } else {
       state.canMove = true;
       console.log(`Possibble moves are: ${pos}`);
-      for (let i = 0; i < pos.length; i++) {
-        boardView.highlightPosition(pos[i], state.playerData.color);
-      }
     }
   }
   //Receive move message
@@ -154,6 +152,17 @@ const handleDiceClick = async (e) => {
   screenView.renderMessage(`You rolled ${state.diceNumber}!`);
   boardView.showSpecificDice(state.diceNumber);
   boardView.hideDice();
+
+  // render possible moves or the skip turn
+  if (state.playerData.possibleMoves.length === 0) {
+    // render the skip turn btn
+    screenView.renderSkipBtn();
+  } else {
+    // highligh pawns
+    state.playerData.possibleMoves.forEach((e) =>
+      boardView.highlightPosition(e, state.playerData.color)
+    );
+  }
 };
 
 /*

@@ -7,12 +7,12 @@ export const highlightPosition = (pos, color) => {
   if (pos === 0) selector = document.querySelector(`.base--${color}`);
   else selector = document.querySelector(`[data-step-id='${pos}']`);
 
-  highlightPawnsIn(selector);
+  highlightPawnsIn(selector, color);
 };
 
-export const highlightPawnsIn = (selector) => {
+export const highlightPawnsIn = (selector, color) => {
   selector
-    .querySelectorAll(".pawn")
+    .querySelectorAll(`.pawn--${color}`)
     .forEach((e) => e.classList.add("pawn--glow"));
 };
 
