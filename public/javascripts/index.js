@@ -20,7 +20,7 @@ const state = {
 };
 
 const debugURL = `localhost:3000`;
-const productionURL = `null`;
+const productionURL = null;
 
 /*
   MESSAGE HANDLER
