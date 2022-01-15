@@ -150,7 +150,7 @@ class Game {
       fromPos === this.boardData.blackStart
     )
       // SAFE POSITION - no killing here!
-      return;
+      return [];
 
     const opponentColor = this.playerColor[(this.nextToMove + 1) % 2];
     const opponentPositions = this.players[(this.nextToMove + 1) % 2].positions;
