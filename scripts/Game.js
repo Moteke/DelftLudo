@@ -150,16 +150,26 @@ class Game {
       fromPos === this.boardData.blackStart
     )
       // SAFE POSITION - no killing here!
-      return;
+      return [];
 
+    const opponentColor = this.playerColor[(this.nextToMove + 1) % 2];
     const opponentPositions = this.players[(this.nextToMove + 1) % 2].positions;
+    const killingMoves = [];
 
     let index = opponentPositions.findIndex((el) => el === fromPos);
 
     while (index != -1) {
+      killingMoves.push({
+        from: opponentPositions[index],
+        to: 0,
+        color: opponentColor,
+      });
+
       opponentPositions[index] = 0;
       index = opponentPositions.findIndex((el) => el === fromPos);
     }
+
+    return killingMoves;
   };
 
   /*
@@ -176,18 +186,21 @@ class Game {
       (el) => el === from
     );
     this.players[this.nextToMove].positions[pawnIndex] = to;
-    this._removeOpponentsPawns(to);
+    const additionalMoves = this._removeOpponentsPawns(to);
 
     this._changeTurn(); // possible change
 
     // it's time to roll again
     this.rolled = false;
     // return the properly styled message about a correct move
-    return {
+
+    const move = {
       from,
       to,
       color: playerColor,
     };
+
+    return [move, ...additionalMoves];
   };
 
   _changeTurn = () => {
@@ -260,6 +273,7 @@ class Game {
   */
   isGameOver = () => {
     if (this.forcedEnd) return "ForcedEnd";
+    if (this.players.length < 2) return false;
     // check if blue pawns are in the base
     let blueWin = true;
     this.players[0].positions.forEach((el) => {
