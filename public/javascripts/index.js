@@ -174,7 +174,7 @@ const handlePawnClick = (e) => {
     console.log("Base move!");
   }
   if (step) {
-    // player wants to make a baord move
+    // player wants to make a board move
     // TODO
     const currentPos = +step.dataset.stepId;
     x.from = currentPos;
