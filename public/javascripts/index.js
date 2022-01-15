@@ -19,12 +19,6 @@ const state = {
 
 boardView.activateDice();
 
-const utils = {
-  getStep: (number) => {
-    return `[data-step-id='${number}'`;
-  },
-};
-
 // promises to make good dice rolling animation
 const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -37,28 +31,6 @@ const socketWait = (state) => {
     }
     resolve("cool");
   });
-};
-
-// ************************
-// PAWN MOVEMENT
-
-const movePawn = (from, to) => {
-  if (from == "base") {
-    // remove one pawn from the base
-    state.base.querySelector(state.pawn).remove();
-    // add one pawn to the start
-    document
-      .querySelector(state.startingStep)
-      .insertAdjacentHTML("beforeend", state.normalPawn);
-  } else {
-    document
-      .querySelector(utils.getStep(from))
-      .querySelector(state.pawn)
-      .remove();
-    document
-      .querySelector(utils.getStep(to))
-      .insertAdjacentHTML("beforeend", state.normalPawn);
-  }
 };
 
 const socket = new WebSocket("ws://localhost:3000");
@@ -195,16 +167,15 @@ const handlePawnClick = (e) => {
   const step = pawn.closest(".board__step");
   let x = Messages.O_CLIENT_MOVE;
   if (base) {
-    // player wants to move from base
-    // TODO
     x.from = 0;
     console.log("Base move!");
   }
   if (step) {
-    // player wants to make a board move
-    // TODO
-    const currentPos = +step.dataset.stepId;
-    x.from = currentPos;
+    const currentPos = step.dataset.stepId;
+    if (currentPos.startsWith("blue") || currentPos.startsWith("black"))
+      x.from = currentPos;
+    else x.from = +currentPos;
+
     console.log("Step move!");
   }
   socket.send(JSON.stringify(x));
