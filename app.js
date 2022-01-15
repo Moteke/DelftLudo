@@ -39,11 +39,12 @@ setInterval(function () {
   for (let i in websockets) {
     let gameObj = websockets[i];
     //if the gameObj has a final status, the game is complete/aborted
-    if (gameObj.finalStatus != null) {
+    if (gameObj.isGameOver()) {
       delete websockets[i];
+      console.log(`Deleting game of player with ID${i}`);
     }
   }
-}, 50000);
+}, 30000);
 
 wss.on("connection", function (ws) {
   //starting of the game
