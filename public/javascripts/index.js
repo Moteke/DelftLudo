@@ -97,7 +97,9 @@ socket.onmessage = function (event) {
   if (incomingMsg.type == Messages.T_WAIT) {
     console.log("Showing waiting screen");
     screenView.deactiveScreenWithMessage("Waiting for another player...");
-  } else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
+  }
+  //Receive type of player
+  else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
     playerType = incomingMsg.data;
     console.log(`Starting game as player ${playerType}`);
     console.log(incomingMsg);
@@ -121,7 +123,9 @@ socket.onmessage = function (event) {
     state.canMove = false;
     console.log("It is opponent turn");
     screenView.renderMessage("Waiting for the opponent to move...");
-  } else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
+  }
+  //Receive you rolled message
+  else if (incomingMsg.type == Messages.T_YOU_ROLLED) {
     state.receivedDice = true;
     state.diceNumber = incomingMsg.data;
     console.log(`You rolled ${incomingMsg.data}`);
@@ -137,6 +141,12 @@ socket.onmessage = function (event) {
         );
       }
     }
+  }
+  //Receive move message
+  else if (incomingMsg.type == Messages.T_MOVE) {
+    let msg = incomingMsg;
+    boardView.removePawn(msg.from, msg.color);
+    //add pawn(needed to be added)
   }
 };
 
