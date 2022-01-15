@@ -24,7 +24,7 @@ export const renderSkipBtn = () => {
   const markup = `
     <span class="skip-turn__btn">Skip turn</span>
   `;
-  skipTurn.insertAdjacentHTML("beforeEnd", markup);
+  elements.skipTurn.insertAdjacentHTML("beforeEnd", markup);
 };
 
 export const removeSkipBtn = () => {

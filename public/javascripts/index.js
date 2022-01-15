@@ -103,7 +103,7 @@ socket.onmessage = function (event) {
     let pos = incomingMsg.activePositions;
     if (pos.length == 0) {
       console.log("There are no possible moves");
-      socket.send(Messages.S_SKIPPED);
+      screenView.renderSkipBtn();
     } else {
       state.canMove = true;
       console.log(`Possibble moves are: ${pos}`);
@@ -195,6 +195,8 @@ const handleSkipBtnClick = (e) => {
   if (!target) return;
 
   // TODO: what should happen when someone clicks the button
+  socket.send(Messages.S_SKIPPED);
+  screenView.removeSkipBtn();
 };
 
 const init = () => {
