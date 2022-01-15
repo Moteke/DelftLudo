@@ -59,7 +59,7 @@ body {
 }
 
 .messages {
-  width: 50%;
+  width: 30%;
   top: 130px;
   position: absolute;
   display: flex;
@@ -68,9 +68,9 @@ body {
 }
 
 .message {
-  font-size: 40px;
+  font-size: 25px;
   font-weight: 300;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .main__container {
@@ -293,10 +293,10 @@ body {
 }
 
 .skip-turn__btn{
-  font-size: 40px;
-  font-weight: 300;
+  font-size: 25px;
+  font-weight: 400;
   color:rgba(0, 166, 214, 1);
-  border: 2px solid rgba(0, 166, 214, 1);
+  border: 3px solid rgba(0, 166, 214, 1);
   padding: 10px 40px;
   transition: all 0.2s;
 }
