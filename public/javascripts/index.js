@@ -119,6 +119,21 @@ socket.onmessage = function (event) {
     boardView.removePawn(msg.from, msg.color);
     boardView.placePawn(msg.to, msg.color);
   }
+  //Receive aborted message
+  else if (incomingMsg.type == Messages.T_ABORTED) {
+    console.log("Game aborted");
+    screenView.renderMessage("Your opponent left. Game Over");
+  }
+  //Receive winner message
+  else if (incomingMsg.type == Messages.T_WIN) {
+    console.log("You won");
+    screenView.renderMessage("Congratulations! You won the game!");
+  }
+  //Receive loser message
+  else if (incomingMsg.type == Messages.T_LOSE) {
+    console.log("You lose");
+    screenView.renderMessage("The game ended! You lose!");
+  }
 };
 
 socket.onopen = function () {
