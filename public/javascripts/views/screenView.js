@@ -19,3 +19,15 @@ export const activateScreen = () => {
 export const renderMessage = (msg) => {
   elements.message.textContent = msg;
 };
+
+export const renderSkipBtn = () => {
+  const markup = `
+    <span class="skip-turn__btn">Skip turn</span>
+  `;
+  skipTurn.insertAdjacentHTML("beforeEnd", markup);
+};
+
+export const removeSkipBtn = () => {
+  const btn = document.querySelector(".skip-turn__btn");
+  if (btn) btn.remove();
+};

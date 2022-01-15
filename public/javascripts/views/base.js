@@ -6,4 +6,5 @@ export const elements = {
   modal: document.querySelector(".modal"),
   message: document.querySelector(".message"),
   board: document.querySelector(".board"),
+  skipTurn: document.querySelector(".skip-turn"),
 };
