@@ -288,7 +288,7 @@ body {
 
   opacity: 0;
   z-index: -900;
-  transition: 0.3s all;
+  transition: 0.2s all ease-in-out;
 }
 
 .modal--visible{
