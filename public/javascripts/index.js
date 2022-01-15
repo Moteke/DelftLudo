@@ -133,6 +133,7 @@ socket.onmessage = function (event) {
     if (pos.length == 0) {
       console.log("There are no possible moves");
     } else {
+      state.canMove = true;
       console.log(`Possibble moves are: ${pos}`);
       for (let i = 0; i < pos.length; i++) {
         boardView.highlightPosition(
