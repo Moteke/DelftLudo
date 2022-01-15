@@ -44,7 +44,7 @@ setInterval(function () {
       console.log(`Deleting game of player with ID${i}`);
     }
   }
-}, 30000);
+}, 60000);
 
 wss.on("connection", function (ws) {
   //starting of the game

@@ -63,6 +63,7 @@ socket.onmessage = function (event) {
       console.log("Game starts");
       init();
       screenView.activateScreen();
+      screenView.activateTimer();
       screenView.renderMessage("Time to start!");
       break;
 
