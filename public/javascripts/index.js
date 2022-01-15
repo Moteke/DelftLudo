@@ -115,10 +115,12 @@ socket.onmessage = function (event) {
     screenView.activateScreen();
     screenView.renderMessage("Time to start!");
   } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
+    boardView.unhighlightAllPawns();
     state.canRoll = true;
     console.log("It is your turn");
     screenView.renderMessage("Time to roll!");
   } else if (incomingMsg.type == Messages.T_OPP_TURN) {
+    boardView.unhighlightAllPawns();
     state.canRoll = false;
     state.canMove = false;
     console.log("It is opponent turn");
@@ -193,7 +195,6 @@ const handlePawnClick = (e) => {
     return;
   }
 
-  socket.send();
   const base = pawn.closest(`.base--${state.playerData.color}`);
   const step = pawn.closest(".board__step");
   let x = Messages.O_CLIENT_MOVE;

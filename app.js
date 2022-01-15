@@ -83,7 +83,7 @@ wss.on("connection", function (ws) {
       //move somewhere
       else if ((oMsg.type = messages.T_CLIENT_MOVE)) {
         const move = oMsg.from;
-        const madeMove = gameObj.madeMove(move);
+        const madeMove = gameObj.makeMove(move);
         //INVALID MOVE
         if (madeMove == "InvalidMove") {
           con.send(messages.S_INVALID);
