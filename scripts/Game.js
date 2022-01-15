@@ -297,6 +297,7 @@ class Game {
     if (blackWin) return this.players[1].ws;
     return false;
   };
+  startTimer = () => {};
 }
 
 module.exports = Game;

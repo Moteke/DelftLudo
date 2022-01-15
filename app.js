@@ -75,11 +75,13 @@ wss.on("connection", function (ws) {
   console.log(`Player ${con["id"]} placed in game ${gameID} as ${playerType}`);
   con.send(playerType == 1 ? messages.S_PLAYER_1 : messages.S_PLAYER_2);
   if (playerType == 1) {
+    statistics.players--;
     statistics.waiting++;
     con.send(messages.S_WAIT);
   }
   if (playerType == 2) {
     statistics.waiting--;
+    statistics.players++;
     const opponent = currentGame.getOpponentOf(con);
     opponent.send(messages.S_START);
     con.send(messages.S_START);
