@@ -36,7 +36,7 @@ export const activateTimer = () => {
   const timer = document.querySelector(".navigation__item--timer");
   let minutes = 0;
   let seconds = 0;
-  setInterval(() => {
+  return setInterval(() => {
     seconds++;
     if (seconds >= 60) {
       seconds -= 60;
