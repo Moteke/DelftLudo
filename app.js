@@ -19,13 +19,17 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public")); // allow to access public files directly
 
 app.get("/", (req, res) => {
-  res.render("splash");
+  res.render("splash", {
+    playersOnline: statistics.players,
+    playersWaiting: statistics.waiting,
+    gamesPlayed: statistics.games_played,
+    fastestVictory: statistics.fastest_victory,
+  });
 });
 
 app.get("/play", (req, res) => {
   res.render("game");
 });
-
 /***************
 Web Socket 
 *****************/
@@ -45,7 +49,7 @@ setInterval(function () {
       statistics.games_played++;
     }
   }
-}, 60000);
+}, 10000);
 
 wss.on("connection", function (ws) {
   //starting the game
@@ -197,7 +201,7 @@ const statistics = {
   players: 0,
   waiting: 0,
   games_played: 0,
-  fastest_victory: 0,
+  fastest_victory: "not known",
 };
 setInterval(() => {
   console.log(statistics);
