@@ -50,7 +50,8 @@ export const placePawnIn = (selector, color) => {
 };
 
 export const hideNormalDice = () => {
-  elements.visibleDiceImage.classList.remove("dice__image--visible");
+  const visible = document.querySelectorAll(".dice__image--visible");
+  visible.forEach((e) => e.classList.remove("dice__image--visible"));
 
   elements.blankDice.classList.add("dice__image--visible");
   elements.dice.classList.remove("dice--active");
