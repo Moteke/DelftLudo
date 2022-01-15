@@ -5,4 +5,5 @@ export const elements = {
   body: document.querySelector("body"),
   modal: document.querySelector(".modal"),
   message: document.querySelector(".message"),
+  board: document.querySelector(".board"),
 };

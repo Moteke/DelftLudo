@@ -1,16 +1,19 @@
 import * as boardView from "./views/boardView.js";
 import * as screenView from "./views/screenView.js";
 
+import { elements } from "./views/base.js";
+
 // ****************
 // STATE
 const state = {
-  base: document.querySelector(".base--blue"),
-  pawn: ".pawn--blue",
-  startingStep: "[data-step-id='2']",
-  pawnMarkup: '<div class="pawn pawn--blue pawn--glow"></div>',
-  normalPawn: '<div class="pawn pawn--blue"></div>',
+  base: "",
   receivedDice: false,
-  diceNumber: 0,
+  canRoll: false,
+  canMove: false,
+  playerData: {
+    id: 0,
+    color: "",
+  },
 };
 
 boardView.activateDice();
@@ -38,35 +41,6 @@ const socketWait = (state) => {
 // ****************
 // DICE
 let active = false;
-const dice = document.querySelector(".dice");
-dice.addEventListener("click", async (e) => {
-  if (!active) return;
-  else active = false;
-
-  const { target } = e;
-
-  // hide the normal dice and show the 0 one
-  boardView.hideNormalDice();
-
-  // add animation for 1 second
-  boardView.startDiceShaking();
-  state.receivedDice = false;
-  socket.send(Messages.S_DICE_ROLLED);
-
-  /*
-    What happens here is we wait for both Promises to resolve:
-      - 1 second wait Promise
-      - Promise that waits until we receive a dice number
-    Once both are ready, we proceed to next lines.
-    'await' keyword is what allows us to stop the execution. It's called async await mechanism.
-    https://javascript.info/async-await
-  */
-  await Promise.all([sleep(1000), socketWait(state)]);
-  boardView.stopDiceShaking();
-  screenView.renderMessage(`You rolled ${state.diceNumber}!`);
-  boardView.showSpecificDice(state.diceNumber);
-  boardView.hideDice();
-});
 
 // *****************
 // BOARD
@@ -118,34 +92,6 @@ const movePawn = (from, to) => {
   }
 };
 
-document.querySelector(".board").addEventListener("click", (e) => {
-  const pawn = e.target.closest(state.pawn);
-  if (!pawn || !pawn.classList.contains("pawn--glow")) {
-    return;
-  }
-
-  // console.log("you clicked your pawn!");
-  // send what user chose to do to the server
-
-  // if you receive OK move the pawn to the desired location
-  const currentPos = +pawn.closest(".board__step").dataset.stepId;
-  let pos = Math.floor((Math.random() * 10000) % 6) + 1;
-  console.log(`Jumping from ${currentPos} to ${((currentPos + pos) % 36) + 1}`);
-  movePawn(currentPos, ((currentPos + pos) % 36) + 1);
-  unhighlightPawns();
-});
-state.base.addEventListener("click", (e) => {
-  const pawn = e.target.closest(state.pawn);
-  if (pawn === null || !pawn.classList.contains("pawn--glow")) {
-    return;
-  }
-  // console.log("You clicked pawn");
-  // send what user chose to do to the server
-
-  // if you receive OK move the pawn to the desired location
-  movePawn("base");
-  unhighlightPawns();
-});
 let playerType;
 const socket = new WebSocket("ws://localhost:3000");
 socket.onmessage = function (event) {
@@ -158,8 +104,13 @@ socket.onmessage = function (event) {
   } else if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
     playerType = incomingMsg.data;
     console.log(`Starting game as player ${playerType}`);
+    console.log(incomingMsg);
+    state.base = document.querySelector(
+      `.base--${playerType === 1 ? "blue" : "black"}`
+    );
   } else if (incomingMsg.type == Messages.T_START) {
     console.log("Game starts");
+    init();
     screenView.activateScreen();
     screenView.renderMessage("Time to start!");
   } else if (incomingMsg.type == Messages.T_YOUR_TURN) {
@@ -191,4 +142,66 @@ socket.onmessage = function (event) {
 
 socket.onopen = function () {
   console.log("Connected to the browser");
+};
+
+const init = () => {
+  elements.dice.addEventListener("click", async (e) => {
+    if (!active) return;
+    else active = false;
+
+    const { target } = e;
+
+    // hide the normal dice and show the 0 one
+    boardView.hideNormalDice();
+
+    // add animation for 1 second
+    boardView.startDiceShaking();
+    state.receivedDice = false;
+    socket.send(Messages.S_DICE_ROLLED);
+
+    /*
+      What happens here is we wait for both Promises to resolve:
+        - 1 second wait Promise
+        - Promise that waits until we receive a dice number
+      Once both are ready, we proceed to next lines.
+      'await' keyword is what allows us to stop the execution. It's called async await mechanism.
+      https://javascript.info/async-await
+    */
+    await Promise.all([sleep(1000), socketWait(state)]);
+    boardView.stopDiceShaking();
+    screenView.renderMessage(`You rolled ${state.diceNumber}!`);
+    boardView.showSpecificDice(state.diceNumber);
+    boardView.hideDice();
+  });
+
+  elements.board.addEventListener("click", (e) => {
+    const pawn = e.target.closest(state.pawn);
+    if (!pawn || !pawn.classList.contains("pawn--glow")) {
+      return;
+    }
+
+    // console.log("you clicked your pawn!");
+    // send what user chose to do to the server
+
+    // if you receive OK move the pawn to the desired location
+    const currentPos = +pawn.closest(".board__step").dataset.stepId;
+    let pos = Math.floor((Math.random() * 10000) % 6) + 1;
+    console.log(
+      `Jumping from ${currentPos} to ${((currentPos + pos) % 36) + 1}`
+    );
+    movePawn(currentPos, ((currentPos + pos) % 36) + 1);
+    unhighlightPawns();
+  });
+  state.base.addEventListener("click", (e) => {
+    const pawn = e.target.closest(state.pawn);
+    if (pawn === null || !pawn.classList.contains("pawn--glow")) {
+      return;
+    }
+    // console.log("You clicked pawn");
+    // send what user chose to do to the server
+
+    // if you receive OK move the pawn to the desired location
+    movePawn("base");
+    unhighlightPawns();
+  });
 };
