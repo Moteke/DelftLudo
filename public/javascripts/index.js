@@ -116,6 +116,7 @@ socket.onmessage = function (event) {
   //Receive move message
   else if (incomingMsg.type == Messages.T_MOVE) {
     let msg = incomingMsg;
+    console.log(msg);
     boardView.removePawn(msg.from, msg.color);
     //add pawn(needed to be added)
   }
