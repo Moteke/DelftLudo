@@ -145,6 +145,13 @@ class Game {
   };
 
   _removeOpponentsPawns = (fromPos) => {
+    if (
+      fromPos === this.boardData.blueStart ||
+      fromPos === this.boardData.blackStart
+    )
+      // SAFE POSITION - no killing here!
+      return;
+
     const opponentPositions = this.players[(this.nextToMove + 1) % 2].positions;
 
     let index = opponentPositions.findIndex((el) => el === fromPos);
