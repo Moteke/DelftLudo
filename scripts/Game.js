@@ -26,7 +26,7 @@ class Game {
   boardData = {
     blueBaseEntrance: 36,
     blackBaseEntrance: 18,
-    blueStart: 1,
+    blueStart: 2,
     blackStart: 20,
   };
 
