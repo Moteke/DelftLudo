@@ -285,7 +285,7 @@ class Game {
     if (blueWin)
       return {
         winner: this.players[0].ws,
-        loser: this.player[1].ws,
+        loser: this.players[1].ws,
       };
 
     // check if black pawns are in the base
@@ -298,7 +298,7 @@ class Game {
     if (blackWin)
       return {
         winner: this.players[1].ws,
-        loser: this.player[0].ws,
+        loser: this.players[0].ws,
       };
     return false;
   };
