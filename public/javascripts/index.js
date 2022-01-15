@@ -136,10 +136,7 @@ socket.onmessage = function (event) {
       state.canMove = true;
       console.log(`Possibble moves are: ${pos}`);
       for (let i = 0; i < pos.length; i++) {
-        boardView.highlightPosition(
-          pos[i],
-          playerType === 1 ? "blue" : "black"
-        );
+        boardView.highlightPosition(pos[i], state.playerData.color);
       }
     }
   }
@@ -196,20 +193,24 @@ const handlePawnClick = (e) => {
     return;
   }
 
+  socket.send();
   const base = pawn.closest(`.base--${state.playerData.color}`);
   const step = pawn.closest(".board__step");
-
+  let x = Messages.O_CLIENT_MOVE;
   if (base) {
     // player wants to move from base
     // TODO
+    x.from = 0;
     console.log("Base move!");
   }
   if (step) {
     // player wants to make a baord move
     // TODO
     const currentPos = +step.dataset.stepId;
+    x.from = currentPos;
     console.log("Step move!");
   }
+  socket.send(JSON.stringify(x));
 };
 
 const init = () => {
