@@ -220,6 +220,18 @@ body {
   animation: shake 0.5s infinite;
 }
 
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 .dice__number {
   display: flex;
   background-color: black;
@@ -264,18 +276,6 @@ body {
 
 .pawn--black {
   background-color: rgba(0, 0, 0, 0.7);
-}
-
-@keyframes shake {
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(8deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
 }
 
 .modal {
