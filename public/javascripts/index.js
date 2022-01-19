@@ -20,12 +20,12 @@ const state = {
 };
 
 const debugURL = `localhost:3000`;
-const productionURL = null;
+const productionURL = `delft-ludo.herokuapp.com/`;
 
 /*
   MESSAGE HANDLER
 */
-const socket = new WebSocket(`ws://${productionURL || debugURL}`);
+const socket = new WebSocket(`wss://${productionURL}`);
 
 socket.onmessage = function (event) {
   let incomingMsg = JSON.parse(event.data);
