@@ -28,18 +28,15 @@ const productionURL = null;
 const socket = new WebSocket(`ws://${productionURL || debugURL}`);
 
 socket.onmessage = function (event) {
-  console.log("Server message:  " + event.data);
   let incomingMsg = JSON.parse(event.data);
 
   switch (incomingMsg.type) {
     case Messages.T_WAIT:
-      console.log("Showing waiting screen");
       screenView.deactiveScreenWithMessage("Waiting for another player...");
       break;
 
     case Messages.T_PLAYER_TYPE:
       let playerType = incomingMsg.data;
-      console.log(`Starting game as player ${playerType}`);
       // set user data to state
       state.playerData = {
         id: playerType,
@@ -49,7 +46,6 @@ socket.onmessage = function (event) {
       break;
 
     case Messages.T_START:
-      console.log("Game starts");
       init();
       screenView.activateScreen();
       state.timer = screenView.activateTimer();
@@ -59,7 +55,6 @@ socket.onmessage = function (event) {
     case Messages.T_YOUR_TURN:
       boardView.activateDice();
       state.canRoll = true;
-      //console.log("It is your turn");
       screenView.setTurnScreen(`Your's`);
       screenView.renderMessage("Time to roll!");
       break;
@@ -67,7 +62,6 @@ socket.onmessage = function (event) {
     case Messages.T_OPP_TURN:
       state.canRoll = false;
       state.canMove = false;
-      //console.log("It is opponent turn");
       screenView.setTurnScreen(`Opponent's`);
       screenView.renderMessage("Waiting for the opponent to move...");
       break;
@@ -75,45 +69,36 @@ socket.onmessage = function (event) {
     case Messages.T_YOU_ROLLED:
       state.receivedDice = true;
       state.diceNumber = incomingMsg.data;
-      console.log(`You rolled ${incomingMsg.data}`);
       let pos = incomingMsg.activePositions;
       state.playerData.possibleMoves = incomingMsg.activePositions;
-      if (pos.length == 0) {
-        console.log("There are no possible moves");
-      } else {
+      if (pos.length != 0) {
         state.canMove = true;
-        console.log(`Possibble moves are: ${pos}`);
       }
       break;
 
     case Messages.T_MOVE:
       let msg = incomingMsg;
-      console.log(msg);
       boardView.removePawn(msg.from, msg.color);
       boardView.placePawn(msg.to, msg.color);
       break;
 
     case Messages.T_ABORTED:
-      console.log("Game aborted");
       endGameBehavior();
       screenView.renderMessage("Your opponent left. Game Over");
       break;
 
     case Messages.T_WIN:
-      console.log("You won");
       endGameBehavior();
       screenView.renderMessage("Congratulations! You won the game!");
       break;
 
     case Messages.T_LOSE:
-      console.log("You lose");
       endGameBehavior();
       screenView.renderMessage("The game ended! You lose!");
       break;
 
     case Messages.T_OPP_ROLLED:
       const dice = incomingMsg.data;
-      console.log(`Opponent rolled ${dice}`);
       screenView.renderMessage(`Opponent rolled ${dice}`);
       break;
   }
@@ -180,15 +165,12 @@ const handlePawnClick = (e) => {
   let x = Messages.O_CLIENT_MOVE;
   if (base) {
     x.from = 0;
-    console.log("Base move!");
   }
   if (step) {
     const currentPos = step.dataset.stepId;
     if (currentPos.startsWith("blue") || currentPos.startsWith("black"))
       x.from = currentPos;
     else x.from = +currentPos;
-
-    console.log("Step move!");
   }
   socket.send(JSON.stringify(x));
   boardView.unhighlightAllPawns();
