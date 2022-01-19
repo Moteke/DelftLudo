@@ -220,6 +220,18 @@ body {
   animation: shake 0.5s infinite;
 }
 
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 .dice__number {
   display: flex;
   background-color: black;
@@ -266,18 +278,6 @@ body {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-@keyframes shake {
-  0% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(8deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-
 .modal {
   position: absolute;
   width: 100%;
@@ -313,11 +313,17 @@ body {
   border: 3px solid rgba(0, 166, 214, 1);
   padding: 10px 40px;
   transition: all 0.2s;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 .skip-turn__btn:hover{
   cursor: pointer;
   background-color: rgba(0, 166, 214, 1);
   color: #fff;
+}
+
+.skip-turn__btn:active{
+  transform: scale(0.98);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 

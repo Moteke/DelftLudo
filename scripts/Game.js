@@ -1,6 +1,3 @@
-/*
-CHANGE TO AN IMPORT
-*/
 function Player(ws, startingLocation) {
   this.ws = ws;
   this.positions = startingLocation;

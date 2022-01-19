@@ -48,10 +48,24 @@ header {
   height: 100%;
 }
 
+@media (max-width: 1000px), (max-height: 570px) {
+  .navigation::before{
+    margin-bottom: 20px;
+    padding: 0 10px;
+    width: 80vw;
+    content: "You are seeing the website below the recommended screen resolution. Consider playing the game on a different device.";
+    color: red;
+    display: inline-block;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+
 .navigation {
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .navigation ul {
@@ -69,13 +83,18 @@ header {
   color: rgba(0, 166, 214, 1);
   transition: all 0.2s;
   background-color: rgba(255,255,255, 0.5);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 .navigation__btn:hover {
   cursor: pointer;
   background-color: rgba(0, 166, 214, 1);
   color: #fff;
-  
+}
+
+.navigation__btn:active{
+  transform: scale(0.98);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
 .navigation__btn:not(:last-child) {
