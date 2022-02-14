@@ -5,12 +5,12 @@ You can play it online here: https://delft-ludo.herokuapp.com/
 ## Getting Started
 
 ### Install
-```json
+```
 npm install
 ```
 
 ### Usage
-```json
+```
 npm start <port-number>
 ```
 
